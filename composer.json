@@ -1,0 +1,19 @@
+{
+	"name": "soderlind/wp-loupe-admin",
+	"description": "Admin search add-on for WP Loupe.",
+	"type": "wordpress-plugin",
+	"require-dev": {
+		"brain/monkey": "^2.6",
+		"mockery/mockery": "^1.6",
+		"phpunit/phpunit": "^9.6 || ^10.5"
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Soderlind\\Plugin\\WPLoupeAdmin\\Tests\\": "tests/php/"
+		}
+	},
+	"scripts": {
+		"test": "phpunit",
+		"test:php": "phpunit"
+	}
+}

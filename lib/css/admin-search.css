@@ -1,0 +1,167 @@
+/* Admin search surfaces */
+
+.wp-loupe-admin-search-modal[hidden] {
+	display: none;
+}
+
+.wp-loupe-admin-search-shell {
+	max-width: 640px;
+}
+
+.wp-loupe-admin-search-row {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.wp-loupe-admin-search-row input[type="search"] {
+	flex: 1;
+	min-width: 0;
+}
+
+.wp-loupe-admin-search-row select {
+	flex: 0 0 140px;
+	max-width: 180px;
+}
+
+.wp-loupe-admin-search-results {
+	margin-top: 12px;
+	min-height: 24px;
+	max-height: 360px;
+	overflow: auto;
+	padding-right: 4px;
+	scrollbar-gutter: stable;
+}
+
+.wp-loupe-admin-search-message {
+	margin: 0;
+	color: #50575e;
+}
+
+.wp-loupe-admin-search-result-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 10px;
+}
+
+.wp-loupe-admin-search-result {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 12px;
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+	display: grid;
+	gap: 4px;
+}
+
+.wp-loupe-admin-search-title {
+	font-weight: 600;
+	text-decoration: none;
+	width: fit-content;
+}
+
+.wp-loupe-admin-search-meta {
+	color: #50575e;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-weight: 600;
+}
+
+.wp-loupe-admin-search-actions {
+	display: flex;
+	gap: 12px;
+	font-size: 12px;
+}
+
+.wp-loupe-admin-search-pagination {
+	margin-top: 12px;
+	display: grid;
+	gap: 8px;
+}
+
+.wp-loupe-admin-search-pagination-controls {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.wp-loupe-admin-search-pagination-indicator {
+	font-size: 12px;
+	font-weight: 600;
+	color: #50575e;
+}
+
+.wp-loupe-admin-search-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100100;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+}
+
+.wp-loupe-admin-search-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba( 17, 24, 39, 0.48 );
+	backdrop-filter: blur( 3px );
+}
+
+.wp-loupe-admin-search-panel {
+	position: relative;
+	width: min( 760px, 100% );
+	max-height: min( 80vh, 720px );
+	overflow: hidden;
+	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	border-radius: 8px;
+	box-shadow: 0 20px 48px rgba( 0, 0, 0, 0.24 );
+	padding: 20px;
+	display: grid;
+	gap: 12px;
+}
+
+.wp-loupe-admin-search-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+}
+
+.wp-loupe-admin-search-header h2 {
+	margin: 0;
+	font-size: 20px;
+	line-height: 1.2;
+}
+
+.wp-loupe-admin-search-header .button-link {
+	font-size: 28px;
+	line-height: 1;
+	text-decoration: none;
+	color: #1d2327;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+}
+
+body.wp-loupe-admin-search-open {
+	overflow: hidden;
+}
+
+@media ( max-width: 782px ) {
+	.wp-loupe-admin-search-row {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.wp-loupe-admin-search-panel {
+		padding: 16px;
+	}
+}

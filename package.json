@@ -1,0 +1,18 @@
+{
+	"name": "wp-loupe-admin",
+	"private": true,
+	"scripts": {
+		"build:js": "node scripts/build-js.mjs",
+		"dev:js": "node scripts/build-js.mjs --watch",
+		"build": "npm run build:js",
+		"i18n:pot": "wp i18n make-pot . languages/wp-loupe-admin.pot --domain=wp-loupe-admin --exclude=node_modules,vendor,tests,lib/js",
+		"i18n:json": "wp i18n make-json languages --no-purge",
+		"i18n": "npm run i18n:pot && npm run i18n:json",
+		"test:js": "vitest run"
+	},
+	"devDependencies": {
+		"esbuild": "^0.27.0",
+		"jsdom": "^26.1.0",
+		"vitest": "^4.0.0"
+	}
+}
