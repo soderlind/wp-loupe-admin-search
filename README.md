@@ -2,6 +2,10 @@
 
 Admin search add-on for WP Loupe.
 
+## Download
+
+[Download the latest release](https://github.com/soderlind/wp-loupe-admin/releases/latest/download/wp-loupe-admin.zip) (zip file, install via **Plugins → Add New → Upload Plugin**).
+
 This plugin keeps admin-search-specific UI, browser behavior, and REST endpoints separate from the main `wp-loupe` plugin while leaving the search engine, indexing, and main settings UI in `wp-loupe`.
 
 ## Scope

@@ -30,6 +30,18 @@ define( 'WP_LOUPE_ADMIN_VERSION', '0.1.0' );
 
 require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-loader.php';
 
+// Update checker via GitHub releases.
+if ( ! class_exists( \Soderlind\WordPress\GitHubUpdater::class ) ) {
+	require_once __DIR__ . '/class-github-updater.php';
+}
+\Soderlind\WordPress\GitHubUpdater::init(
+	github_url: 'https://github.com/soderlind/wp-loupe-admin',
+	plugin_file: WP_LOUPE_ADMIN_FILE,
+	plugin_slug: 'wp-loupe-admin',
+	name_regex: '/wp-loupe-admin\.zip/',
+	branch: 'main',
+);
+
 /**
  * Ensure WP Loupe classes are loaded for this request.
  *
