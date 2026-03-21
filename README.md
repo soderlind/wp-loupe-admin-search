@@ -2,10 +2,6 @@
 
 A faster, smarter search experience for the WordPress admin. This add-on replaces the default admin search with [WP Loupe](https://github.com/soderlind/wp-loupe)-powered typo-tolerant, relevance-ranked results.
 
-## Download
-
-[Download the latest release](https://github.com/soderlind/wp-loupe-admin/releases/latest/download/wp-loupe-admin-search.zip) (zip file, install via **Plugins → Add New → Upload Plugin**).
-
 ## Features
 
 - **Dashboard search widget** — search your site content right from the dashboard.
