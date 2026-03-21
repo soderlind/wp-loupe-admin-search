@@ -25,12 +25,14 @@ A faster, smarter search experience for the WordPress admin. This add-on replace
 - PHP 8.3+
 - [WP Loupe](https://github.com/soderlind/wp-loupe) plugin active
 
-## Getting Started
+## Installation
 
-1. Install and activate [WP Loupe](https://github.com/soderlind/wp-loupe).
-2. Install and activate WP Loupe – Admin Search.
-3. Search indexes are built automatically on the first admin page load.
-4. Start searching — use the dashboard widget, admin bar icon, or any native search box.
+1. Download the latest [`wp-loupe-admin-search.zip`](https://github.com/soderlind/wp-loupe-admin-search/releases/latest/download/wp-loupe-admin-search.zip).
+2. In WordPress, go to **Plugins → Add New → Upload Plugin** and upload the zip.
+3. Activate the plugin.
+
+The plugin updates itself automatically via GitHub releases using [plugin-update-checker](https://github.com/YahnisElsts/plugin-update-checker).
+
 
 ## WP-CLI
 
