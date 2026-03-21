@@ -6,6 +6,7 @@ namespace Soderlind\Plugin\WPLoupeAdmin\Tests;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
+use Soderlind\Plugin\WPLoupeAdmin\WP_Loupe_Admin_Indexer;
 use Soderlind\Plugin\WPLoupeAdmin\WP_Loupe_Admin_REST;
 
 final class RestControllerTest extends TestCase {
@@ -105,5 +106,75 @@ final class RestControllerTest extends TestCase {
 
 		self::assertInstanceOf( \WP_Error::class, $result );
 		self::assertSame( 'wp_loupe_admin_search_missing_query', $result->get_error_code() );
+	}
+
+	public function test_handle_search_returns_content_context_fields(): void {
+		$indexer = $this->createMock( WP_Loupe_Admin_Indexer::class );
+		$indexer->method( 'search' )
+			->with( 'hello' )
+			->willReturn( [
+				[
+					'id'        => 42,
+					'post_type' => 'post',
+					'_score'    => 9.5,
+				],
+			] );
+
+		$controller = new WP_Loupe_Admin_REST( [ 'post' ], $indexer );
+		$request    = new \WP_REST_Request();
+		$request->set_param( 'q', 'hello' );
+		$request->set_param( 'scope', 'content' );
+
+		Functions\when( 'sanitize_key' )->alias( static fn( string $value ): string => $value );
+		Functions\when( '__' )->alias( static fn( string $text ): string => $text );
+		Functions\when( 'get_option' )->alias( static fn( string $name ): string => 'date_format' === $name ? 'Y-m-d' : '' );
+		Functions\when( 'rest_ensure_response' )->alias( static fn( array $data ): \WP_REST_Response => new \WP_REST_Response( $data ) );
+		Functions\expect( 'get_post' )
+			->once()
+			->with( 42 )
+			->andReturn( (object) [
+				'ID'          => 42,
+				'post_type'   => 'post',
+				'post_status' => 'publish',
+				'post_author' => 7,
+			] );
+		Functions\expect( 'get_edit_post_link' )
+			->once()
+			->with( 42, 'raw' )
+			->andReturn( 'https://plugins.local/wp-admin/post.php?post=42&action=edit' );
+		Functions\expect( 'get_post_type_object' )
+			->once()
+			->with( 'post' )
+			->andReturn( (object) [ 'labels' => (object) [ 'singular_name' => 'Post' ] ] );
+		Functions\expect( 'get_post_status_object' )
+			->once()
+			->with( 'publish' )
+			->andReturn( (object) [ 'label' => 'Published' ] );
+		Functions\expect( 'get_the_title' )->once()->with( 42 )->andReturn( 'Hello World' );
+		Functions\expect( 'get_permalink' )->once()->with( 42 )->andReturn( 'https://plugins.local/hello-world/' );
+		Functions\expect( 'get_the_excerpt' )->once()->with( 42 )->andReturn( 'Excerpt body for admin search results.' );
+		Functions\expect( 'wp_strip_all_tags' )
+			->once()
+			->with( 'Excerpt body for admin search results.' )
+			->andReturn( 'Excerpt body for admin search results.' );
+		Functions\expect( 'wp_trim_words' )
+			->once()
+			->with( 'Excerpt body for admin search results.', 24, '...' )
+			->andReturn( 'Excerpt body for admin search results.' );
+		Functions\expect( 'get_userdata' )
+			->once()
+			->with( 7 )
+			->andReturn( (object) [ 'display_name' => 'Per' ] );
+		Functions\expect( 'get_the_date' )
+			->once()
+			->with( 'Y-m-d', 42 )
+			->andReturn( '2026-03-21' );
+
+		$result = $controller->handle_search( $request );
+
+		self::assertInstanceOf( \WP_REST_Response::class, $result );
+		self::assertSame( 'Excerpt body for admin search results.', $result->get_data()['hits'][0]['excerpt'] );
+		self::assertSame( 'Per', $result->get_data()['hits'][0]['authorName'] );
+		self::assertSame( '2026-03-21', $result->get_data()['hits'][0]['dateLabel'] );
 	}
 }

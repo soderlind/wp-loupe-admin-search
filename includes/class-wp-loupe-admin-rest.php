@@ -8,14 +8,19 @@ class WP_Loupe_Admin_REST {
 	/** @var array<int,string> */
 	private $post_types = [];
 
+	/** @var WP_Loupe_Admin_Indexer|null */
+	private $indexer;
+
 	/** @var bool */
 	private $routes_registered = false;
 
 	/**
-	 * @param array<int,string> $post_types Indexed post types.
+	 * @param array<int,string>          $post_types Indexed post types.
+	 * @param WP_Loupe_Admin_Indexer|null $indexer    Admin indexer for content searches.
 	 */
-	public function __construct( array $post_types ) {
+	public function __construct( array $post_types, ?WP_Loupe_Admin_Indexer $indexer = null ) {
 		$this->post_types = $post_types;
+		$this->indexer    = $indexer;
 	}
 
 	/**
@@ -135,12 +140,8 @@ class WP_Loupe_Admin_REST {
 			return $this->handle_user_search( $query, $per_page, $page );
 		}
 
-		if ( ! class_exists( '\\Soderlind\\Plugin\\WPLoupe\\WP_Loupe_Search_Engine' ) ) {
-			return new \WP_Error( 'wp_loupe_admin_search_unavailable', __( 'WP Loupe search is not available for this request.', 'wp-loupe-admin' ), [ 'status' => 503 ] );
-		}
-
-		$hits     = $this->get_search_engine()->search( $query );
-		$results  = [];
+		$hits    = $this->search_content( $query );
+		$results = [];
 
 		foreach ( (array) $hits as $hit ) {
 			if ( empty( $hit['id'] ) || empty( $hit['post_type'] ) ) {
@@ -161,6 +162,7 @@ class WP_Loupe_Admin_REST {
 
 			$post_type_object = get_post_type_object( $post_type );
 			$status_object    = get_post_status_object( $post->post_status );
+			$author           = get_userdata( (int) $post->post_author );
 
 			$results[] = [
 				'id'            => $post_id,
@@ -171,6 +173,9 @@ class WP_Loupe_Admin_REST {
 				'statusLabel'   => $status_object && isset( $status_object->label ) ? $status_object->label : $post->post_status,
 				'editUrl'       => $edit_url,
 				'viewUrl'       => get_permalink( $post_id ),
+				'excerpt'       => $this->get_result_excerpt( $post_id ),
+				'authorName'    => $author && isset( $author->display_name ) ? (string) $author->display_name : '',
+				'dateLabel'     => get_the_date( get_option( 'date_format' ), $post_id ),
 				'_score'        => isset( $hit['_score'] ) ? (float) $hit['_score'] : 0.0,
 			];
 		}
@@ -322,13 +327,38 @@ class WP_Loupe_Admin_REST {
 	}
 
 	/**
-	 * Create the search engine lazily.
+	 * Build a plain-text excerpt suitable for admin search results.
 	 *
-	 * @return object
+	 * @param int $post_id Post ID.
+	 * @return string
 	 */
-	private function get_search_engine() {
-		$class_name = '\\Soderlind\\Plugin\\WPLoupe\\WP_Loupe_Search_Engine';
+	private function get_result_excerpt( int $post_id ): string {
+		$excerpt = trim( wp_strip_all_tags( (string) get_the_excerpt( $post_id ) ) );
 
-		return new $class_name( $this->post_types );
+		if ( '' === $excerpt ) {
+			return '';
+		}
+
+		return wp_trim_words( $excerpt, 24, '...' );
+	}
+
+	/**
+	 * Search content using the admin indexer (preferred) or the main search engine.
+	 *
+	 * @param string $query Search query.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function search_content( string $query ): array {
+		if ( $this->indexer ) {
+			return $this->indexer->search( $query );
+		}
+
+		$class_name = '\\Soderlind\\Plugin\\WPLoupe\\WP_Loupe_Search_Engine';
+		if ( ! class_exists( $class_name ) ) {
+			return [];
+		}
+
+		$engine = new $class_name( $this->post_types );
+		return (array) $engine->search( $query );
 	}
 }

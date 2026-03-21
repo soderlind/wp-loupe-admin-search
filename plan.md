@@ -119,3 +119,84 @@ The next safe milestone is:
 5. Leave the main WP Loupe settings and reindex/settings UI in `wp-loupe`.
 
 This reduces risk and gives a working add-on early.
+
+---
+
+## Admin Index Schema
+
+`wp-loupe-admin` maintains its own search indexes, separate from the main `wp-loupe` plugin. Indexes are stored at `{wp_loupe_db_path}/admin/{post_type}/` and include all admin-relevant post statuses: publish, draft, pending, private, future.
+
+The schema is defined in `WP_Loupe_Admin_Schema` and is filterable via the `wp_loupe_admin_schema` hook.
+
+### Post Types
+
+Every indexed post type gets these core fields:
+
+| Field | Searchable | Filterable | Sortable | Weight | Source |
+|---|---|---|---|---|---|
+| `post_title` | yes | yes | yes | 3.0 | `WP_Post->post_title` |
+| `post_content` | yes | no | no | 1.0 | `WP_Post->post_content` (HTML stripped) |
+| `post_excerpt` | yes | no | no | 1.5 | `WP_Post->post_excerpt` (HTML stripped) |
+| `post_name` | yes | no | no | 1.0 | `WP_Post->post_name` |
+| `post_status` | no | yes | no | — | `WP_Post->post_status` |
+| `post_date` | no | yes | yes | — | `WP_Post->post_date` |
+| `author_name` | yes | yes | yes | 2.0 | Resolved from `get_userdata( post_author )->display_name` |
+
+Plus dynamic taxonomy fields for each `show_ui` taxonomy attached to the post type:
+
+| Field | Searchable | Filterable | Sortable | Weight | Source |
+|---|---|---|---|---|---|
+| `taxonomy_{name}` | yes | yes | no | 1.5 | `wp_get_post_terms()` names |
+
+For the built-in `post` type, this adds `taxonomy_category` and `taxonomy_post_tag`. Other post types get their registered taxonomies automatically.
+
+Any field not matched to a `WP_Post` property, virtual field, or taxonomy falls back to `get_post_meta()`.
+
+### Future Entity Types (Not Yet Indexed)
+
+These schemas are defined but not yet wired into the indexer.
+
+#### Users
+
+| Field | Searchable | Filterable | Sortable | Weight |
+|---|---|---|---|---|
+| `display_name` | yes | yes | yes | 3.0 |
+| `user_login` | yes | yes | no | 2.0 |
+| `user_email` | yes | yes | no | 2.0 |
+| `user_role` | no | yes | no | — |
+
+#### Comments
+
+| Field | Searchable | Filterable | Sortable | Weight |
+|---|---|---|---|---|
+| `comment_content` | yes | no | no | 1.0 |
+| `comment_author` | yes | yes | yes | 2.0 |
+| `comment_author_email` | yes | yes | no | 1.0 |
+| `comment_date` | no | yes | yes | — |
+
+#### Plugins
+
+| Field | Searchable | Filterable | Sortable | Weight |
+|---|---|---|---|---|
+| `plugin_name` | yes | yes | yes | 3.0 |
+| `plugin_description` | yes | no | no | 1.0 |
+| `plugin_author` | yes | yes | no | 2.0 |
+| `plugin_status` | no | yes | no | — |
+
+### Extensibility
+
+Filter `wp_loupe_admin_schema` to add, remove, or modify fields for any entity type:
+
+```php
+add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_type ): array {
+    if ( 'post' === $entity_type ) {
+        $fields['my_custom_meta'] = [
+            'searchable' => true,
+            'filterable' => false,
+            'sortable'   => false,
+            'weight'     => 1.0,
+        ];
+    }
+    return $fields;
+}, 10, 2 );
+```

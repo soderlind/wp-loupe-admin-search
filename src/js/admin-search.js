@@ -35,7 +35,6 @@
 			this.bindOpeners();
 			this.bindModal();
 			this.bindForms();
-			this.bindNativeSearchInterceptors();
 		}
 
 		installNonceMiddleware() {
@@ -89,52 +88,34 @@
 
 		bindForms() {
 			this.forms.forEach( ( form ) => {
-				const shell = form.closest( '.wp-loupe-admin-search-shell' );
-
-				if ( shell ) {
-					shell.addEventListener( 'click', ( event ) => {
-						const pageButton = event.target.closest(
-							'[data-wp-loupe-page]'
-						);
-
-						if ( ! pageButton ) {
-							return;
-						}
-
-						event.preventDefault();
-						void this.handleSubmit(
-							form,
-							Number( pageButton.dataset.wpLoupePage ) || 1
-						);
-					} );
-				}
-
-				form.addEventListener( 'submit', async ( event ) => {
-					event.preventDefault();
-					await this.handleSubmit( form, 1 );
-				} );
+				this.bindSearchForm( form );
 			} );
 		}
 
-		bindNativeSearchInterceptors() {
-			[
-				{ selector: '#plugin-search-input', scope: 'plugins' },
-				{ selector: '#user-search-input', scope: 'users' },
-			].forEach( ( interceptor ) => {
-				const input = document.querySelector( interceptor.selector );
-				const form = input?.closest( 'form' );
+		bindSearchForm( form ) {
+			const shell = form.closest( '.wp-loupe-admin-search-shell' );
 
-				if ( ! input || ! form ) {
+			if ( ! shell ) {
+				return;
+			}
+
+			shell.addEventListener( 'click', ( event ) => {
+				const pageButton = event.target.closest( '[data-wp-loupe-page]' );
+
+				if ( ! pageButton ) {
 					return;
 				}
 
-				form.addEventListener( 'submit', ( event ) => {
-					event.preventDefault();
-					void this.openScopedSearch(
-						interceptor.scope,
-						input.value.trim()
-					);
-				} );
+				event.preventDefault();
+				void this.handleSubmit(
+					form,
+					Number( pageButton.dataset.wpLoupePage ) || 1
+				);
+			} );
+
+			form.addEventListener( 'submit', async ( event ) => {
+				event.preventDefault();
+				await this.handleSubmit( form, 1 );
 			} );
 		}
 
@@ -430,9 +411,16 @@
 
 			const meta = document.createElement( 'div' );
 			meta.className = 'wp-loupe-admin-search-meta';
-			meta.textContent = [ hit.postTypeLabel, hit.statusLabel ]
+			meta.textContent = [
+				hit.postTypeLabel,
+				hit.statusLabel,
+				hit.authorName,
+				hit.dateLabel,
+			]
 				.filter( Boolean )
 				.join( ' - ' );
+
+			const excerpt = this.createExcerpt( hit.excerpt );
 
 			const actions = document.createElement( 'div' );
 			actions.className = 'wp-loupe-admin-search-actions';
@@ -458,9 +446,24 @@
 
 			item.appendChild( title );
 			item.appendChild( meta );
+			if ( excerpt ) {
+				item.appendChild( excerpt );
+			}
 			item.appendChild( actions );
 
 			return item;
+		}
+
+		createExcerpt( excerpt ) {
+			if ( ! excerpt ) {
+				return null;
+			}
+
+			const paragraph = document.createElement( 'p' );
+			paragraph.className = 'wp-loupe-admin-search-excerpt';
+			paragraph.textContent = excerpt;
+
+			return paragraph;
 		}
 
 		createActionLink( href, label, newTab = false ) {

@@ -31,9 +31,23 @@ class WP_Loupe_Admin_Loader {
 		$this->setup_post_types();
 
 		require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-rest.php';
+		require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-schema.php';
+		require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-indexer.php';
+		require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-query-integration.php';
 
-		$rest_controller = new WP_Loupe_Admin_REST( $this->post_types );
+		$schema        = new WP_Loupe_Admin_Schema();
+		$admin_indexer = new WP_Loupe_Admin_Indexer( $this->post_types, $schema );
+
+		$rest_controller = new WP_Loupe_Admin_REST( $this->post_types, $admin_indexer );
 		$rest_controller->register();
+		$admin_indexer->register();
+
+		if ( $admin_indexer->needs_initial_index() ) {
+			add_action( 'admin_init', [ $admin_indexer, 'reindex_all' ] );
+		}
+
+		$query_integration = new WP_Loupe_Admin_Query_Integration( $this->post_types, $admin_indexer );
+		$query_integration->register();
 
 		if ( is_admin() ) {
 			require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-search.php';

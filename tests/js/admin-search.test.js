@@ -9,8 +9,6 @@ const createApiFetch = () => {
 
 const buildMarkup = () => `
 	<div id="wp-admin-bar-wp-loupe-admin-search"><a class="ab-item" href="#wp-loupe-admin-search">Open</a></div>
-	<form id="native-plugin-search"><input id="plugin-search-input" value="akismet" /></form>
-	<form id="native-user-search"><input id="user-search-input" value="admin" /></form>
 	<div id="wp-loupe-admin-search-modal" hidden>
 		<div class="wp-loupe-admin-search-panel" tabindex="-1">
 			<div class="wp-loupe-admin-search-shell" data-wp-loupe-search-shell="modal">
@@ -57,15 +55,18 @@ describe( 'admin search client', () => {
 					title: 'Result',
 					editUrl: 'https://plugins.local/wp-admin/post.php?post=1&action=edit',
 					viewUrl: '',
-					postTypeLabel: 'Plugin',
-					statusLabel: 'Active',
+					postTypeLabel: 'Post',
+					statusLabel: 'Published',
+					authorName: 'Per',
+					dateLabel: '2026-03-21',
+					excerpt: 'Context excerpt for the current result.',
 				},
 			],
 			total: 1,
-			query: 'akismet',
+			query: 'hello',
 			page: 1,
 			totalPages: 1,
-			scope: 'plugins',
+			scope: 'content',
 		} );
 
 		window.wpLoupeAdminSearch = {
@@ -106,25 +107,48 @@ describe( 'admin search client', () => {
 		);
 	} );
 
-	it( 'intercepts native plugin search and opens the modal search with plugin scope', async () => {
+	it( 'opens modal search from the admin bar and renders content results', async () => {
 		await import( '../../src/js/admin-search.js' );
 		document.dispatchEvent( new Event( 'DOMContentLoaded' ) );
 
-		const pluginForm = document.getElementById( 'native-plugin-search' );
-		pluginForm.dispatchEvent( new Event( 'submit', { bubbles: true, cancelable: true } ) );
+		document.querySelector( '#wp-admin-bar-wp-loupe-admin-search .ab-item' ).click();
+		const modalForm = document.querySelector(
+			'.wp-loupe-admin-search-form[data-wp-loupe-search-form="modal"]'
+		);
+		modalForm.querySelector( 'input[name="q"]' ).value = 'hello';
+		modalForm.dispatchEvent( new Event( 'submit', { bubbles: true, cancelable: true } ) );
 
 		await Promise.resolve();
 
 		expect( document.getElementById( 'wp-loupe-admin-search-modal' ).hidden ).toBe( false );
-		expect(
-			document.querySelector(
-				'#wp-loupe-admin-search-modal select[name="scope"]'
-			).value
-		).toBe( 'plugins' );
 		expect( window.wp.apiFetch ).toHaveBeenCalledWith(
 			expect.objectContaining( {
-				path: expect.stringContaining( 'scope=plugins' ),
+				path: expect.stringContaining( 'scope=content' ),
 			} )
 		);
+		expect(
+			document.querySelector( '.wp-loupe-admin-search-meta' ).textContent
+		).toContain( 'Per' );
+		expect(
+			document.querySelector( '.wp-loupe-admin-search-excerpt' ).textContent
+		).toBe( 'Context excerpt for the current result.' );
+	} );
+
+	it( 'does not intercept native admin search forms anymore', async () => {
+		await import( '../../src/js/admin-search.js' );
+		document.dispatchEvent( new Event( 'DOMContentLoaded' ) );
+		const nativeForm = document.createElement( 'form' );
+		nativeForm.innerHTML = '<input id="post-search-input" value="hello" /><input type="submit" value="Search" />';
+		document.body.appendChild( nativeForm );
+
+		const submitEvent = new Event( 'submit', {
+			bubbles: true,
+			cancelable: true,
+		} );
+		nativeForm.dispatchEvent( submitEvent );
+		await Promise.resolve();
+
+		expect( submitEvent.defaultPrevented ).toBe( false );
+		expect( window.wp.apiFetch ).not.toHaveBeenCalled();
 	} );
 } );
