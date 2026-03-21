@@ -5,7 +5,7 @@ A faster, smarter search experience for the WordPress admin. This add-on replace
 ## Features
 
 - **Dashboard search widget** — search your site content right from the dashboard.
-- **Admin bar launcher** — press the search icon in the admin bar to open a modal search overlay.
+- **Admin bar launcher** — click "Loupe Search" in the admin bar to open a modal search overlay.
 - **Modal search with scope switcher** — search across content, users, plugins, and comments from a single modal.
 - **Native list table search** — the standard search boxes on Posts, Pages, custom post types, Media, Users, and Comments screens are automatically enhanced with Loupe results.
 - **Typo-tolerant & ranked** — powered by the Loupe search engine, results are fuzzy-matched and ranked by relevance.
