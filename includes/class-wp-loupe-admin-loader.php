@@ -103,6 +103,13 @@ class WP_Loupe_Admin_Loader {
 
 			$admin_notice = new WP_Loupe_Admin_Notice( $admin_indexer, $user_indexer, $comment_indexer, $plugin_indexer );
 			$admin_notice->register();
+		} else {
+			// Frontend: always load search class; its methods gate on is_admin_bar_showing()
+			// at render time (too early to check here at plugins_loaded).
+			require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-search.php';
+
+			$admin_search = new WP_Loupe_Admin_Search( $this->post_types );
+			$admin_search->register();
 		}
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {

@@ -1,5 +1,97 @@
 /* Admin search surfaces */
 
+/*
+ * Self-contained form/button styles scoped to the search UI so the modal
+ * renders correctly on the frontend where wp-admin CSS is not loaded.
+ */
+
+.wp-loupe-admin-search-shell .screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	word-wrap: normal !important;
+}
+
+.wp-loupe-admin-search-shell .description {
+	color: #646970;
+	font-size: 13px;
+	font-style: italic;
+}
+
+.wp-loupe-admin-search-shell select,
+.wp-loupe-admin-search-shell input[type="search"] {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+	line-height: 2;
+	color: #2c3338;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	padding: 0 8px;
+	box-shadow: none;
+	background-color: #fff;
+	box-sizing: border-box;
+	min-height: 30px;
+}
+
+.wp-loupe-admin-search-shell select:focus,
+.wp-loupe-admin-search-shell input[type="search"]:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: 2px solid transparent;
+}
+
+.wp-loupe-admin-search-shell .button,
+.wp-loupe-admin-search-shell .button-primary {
+	display: inline-block;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 13px;
+	line-height: 2.15384615;
+	min-height: 30px;
+	margin: 0;
+	padding: 0 10px;
+	border: 1px solid #2271b1;
+	border-radius: 3px;
+	white-space: nowrap;
+	box-sizing: border-box;
+	cursor: pointer;
+	text-decoration: none;
+	vertical-align: top;
+}
+
+.wp-loupe-admin-search-shell .button {
+	color: #2271b1;
+	background: #f6f7f7;
+	border-color: #2271b1;
+}
+
+.wp-loupe-admin-search-shell .button:hover {
+	background: #f0f0f1;
+	border-color: #0a4b78;
+	color: #0a4b78;
+}
+
+.wp-loupe-admin-search-shell .button:disabled {
+	color: #a7aaad !important;
+	border-color: #dcdcde !important;
+	background: #f6f7f7 !important;
+	cursor: default;
+	box-shadow: none !important;
+}
+
+.wp-loupe-admin-search-shell .button-primary {
+	background: #2271b1;
+	border-color: #2271b1;
+	color: #fff;
+}
+
+.wp-loupe-admin-search-shell .button-primary:hover {
+	background: #135e96;
+	border-color: #135e96;
+	color: #fff;
+}
+
 .wp-loupe-admin-search-modal[hidden] {
 	display: none;
 }

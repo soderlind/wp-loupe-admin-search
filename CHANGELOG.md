@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.1.0
+
+### Added
+- Admin bar search modal available on the frontend when the admin bar is visible.
+- Self-contained CSS for the search modal so it renders correctly without wp-admin stylesheets.
+
+### Fixed
+- `enqueue_assets()` missing default parameter caused a fatal error on frontend (`wp_enqueue_scripts` passes no arguments).
+
 ## 1.0.0
 
 ### Added

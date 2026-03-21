@@ -48,12 +48,10 @@ final class AdminSearchTest extends TestCase {
 			->times( 1 )
 			->with( 'manage_options' )
 			->andReturn( true );
-		Functions\expect( 'is_admin' )->once()->andReturn( true );
+		Functions\expect( 'is_admin' )->times( 2 )->andReturn( true );
 
-		Functions\expect( 'wp_register_style' )->once();
-		Functions\expect( 'wp_register_script' )->once();
-		Functions\expect( 'wp_enqueue_style' )->once()->with( 'wp-loupe-admin-addon' );
-		Functions\expect( 'wp_enqueue_script' )->once()->with( 'wp-loupe-admin-addon' );
+		Functions\expect( 'wp_enqueue_style' )->once();
+		Functions\expect( 'wp_enqueue_script' )->once();
 		Functions\expect( 'wp_create_nonce' )->once()->with( 'wp_rest' )->andReturn( 'test-nonce' );
 
 		Functions\expect( '__' )

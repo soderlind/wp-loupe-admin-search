@@ -3,7 +3,7 @@
  * Plugin Name:       WP Loupe - Admin Search
  * Plugin URI:        https://github.com/soderlind/wp-loupe-admin
  * Description:       Admin search add-on for WP Loupe.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Per Soderlind
  * Author URI:        https://soderlind.no
  * License:           GPL-2.0+
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'WP_LOUPE_ADMIN_FILE', __FILE__ );
 define( 'WP_LOUPE_ADMIN_PATH', plugin_dir_path( WP_LOUPE_ADMIN_FILE ) );
 define( 'WP_LOUPE_ADMIN_URL', plugin_dir_url( WP_LOUPE_ADMIN_FILE ) );
-define( 'WP_LOUPE_ADMIN_VERSION', '1.0.0' );
+define( 'WP_LOUPE_ADMIN_VERSION', '1.1.0' );
 
 require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-loader.php';
 
@@ -81,6 +81,17 @@ function bootstrap(): void {
 	if ( ! ensure_wp_loupe_loaded() ) {
 		if ( is_admin() ) {
 			add_action( 'admin_notices', __NAMESPACE__ . '\\render_dependency_notice' );
+		} else {
+			// On the frontend, WP Loupe classes may not be loaded. The admin bar
+			// search only needs the UI class and talks to the REST API, so register
+			// it independently of the full loader.
+			require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-search.php';
+			$options    = get_option( 'wp_loupe_custom_post_types', [] );
+			$post_types = ! empty( $options['wp_loupe_post_type_field'] )
+				? (array) $options['wp_loupe_post_type_field']
+				: [ 'post', 'page' ];
+			$admin_search = new WP_Loupe_Admin_Search( $post_types );
+			$admin_search->register();
 		}
 		return;
 	}

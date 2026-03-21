@@ -25,6 +25,10 @@ class WP_Loupe_Admin_Search {
 		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_item' ], 85 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'admin_footer', [ $this, 'render_modal' ] );
+
+		// Support admin bar search on the frontend.
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_action( 'wp_footer', [ $this, 'render_modal' ] );
 	}
 
 	/**
@@ -92,7 +96,7 @@ class WP_Loupe_Admin_Search {
 	 * @return void
 	 */
 	public function add_admin_bar_item( \WP_Admin_Bar $admin_bar ): void {
-		if ( ! is_admin() || ! $this->current_user_can_access_search() ) {
+		if ( ! $this->current_user_can_access_search() ) {
 			return;
 		}
 
@@ -114,19 +118,23 @@ class WP_Loupe_Admin_Search {
 	 * @param string $hook Current admin page hook.
 	 * @return void
 	 */
-	public function enqueue_assets( $hook ): void {
-		if ( ! $this->current_user_can_access_search() || ! is_admin() ) {
+	public function enqueue_assets( $hook = '' ): void {
+		if ( ! $this->current_user_can_access_search() ) {
 			return;
 		}
 
-		wp_register_style(
+		if ( ! is_admin() && ! is_admin_bar_showing() ) {
+			return;
+		}
+
+		wp_enqueue_style(
 			'wp-loupe-admin-addon',
 			WP_LOUPE_ADMIN_URL . 'lib/css/admin-search.css',
 			[],
 			WP_LOUPE_ADMIN_VERSION
 		);
 
-		wp_register_script(
+		wp_enqueue_script(
 			'wp-loupe-admin-addon',
 			WP_LOUPE_ADMIN_URL . 'lib/js/admin-search.js',
 			[ 'wp-api-fetch', 'wp-i18n' ],
@@ -134,27 +142,28 @@ class WP_Loupe_Admin_Search {
 			true
 		);
 
-		wp_enqueue_style( 'wp-loupe-admin-addon' );
-		wp_enqueue_script( 'wp-loupe-admin-addon' );
-
-		wp_localize_script( 'wp-loupe-admin-addon', 'wpLoupeAdminSearch', [
-			'path'    => '/wp-loupe-admin/v1/search',
-			'nonce'   => wp_create_nonce( 'wp_rest' ),
-			'labels'  => [
-				'emptyQuery' => __( 'Enter a search term.', 'wp-loupe-admin' ),
-				'loading'    => __( 'Searching...', 'wp-loupe-admin' ),
-				'noResults'  => __( 'No matching results found.', 'wp-loupe-admin' ),
-				'error'      => __( 'Search failed. Please try again.', 'wp-loupe-admin' ),
-				'previous'   => __( 'Previous', 'wp-loupe-admin' ),
-				'next'       => __( 'Next', 'wp-loupe-admin' ),
-				'page'       => __( 'Page', 'wp-loupe-admin' ),
-				'of'         => __( 'of', 'wp-loupe-admin' ),
-				'content'    => __( 'Content', 'wp-loupe-admin' ),
-				'users'      => __( 'Users', 'wp-loupe-admin' ),
-				'plugins'    => __( 'Plugins', 'wp-loupe-admin' ),
-			],
-			'perPage' => 'index.php' === $hook ? 8 : 10,
-		] );
+		wp_localize_script(
+			'wp-loupe-admin-addon',
+			'wpLoupeAdminSearch',
+			[
+				'path'    => '/wp-loupe-admin/v1/search',
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'labels'  => [
+					'emptyQuery' => __( 'Enter a search term.', 'wp-loupe-admin' ),
+					'loading'    => __( 'Searching...', 'wp-loupe-admin' ),
+					'noResults'  => __( 'No matching results found.', 'wp-loupe-admin' ),
+					'error'      => __( 'Search failed. Please try again.', 'wp-loupe-admin' ),
+					'previous'   => __( 'Previous', 'wp-loupe-admin' ),
+					'next'       => __( 'Next', 'wp-loupe-admin' ),
+					'page'       => __( 'Page', 'wp-loupe-admin' ),
+					'of'         => __( 'of', 'wp-loupe-admin' ),
+					'content'    => __( 'Content', 'wp-loupe-admin' ),
+					'users'      => __( 'Users', 'wp-loupe-admin' ),
+					'plugins'    => __( 'Plugins', 'wp-loupe-admin' ),
+				],
+				'perPage' => is_admin() && 'index.php' === $hook ? 8 : 10,
+			]
+		);
 	}
 
 	/**
@@ -163,7 +172,11 @@ class WP_Loupe_Admin_Search {
 	 * @return void
 	 */
 	public function render_modal(): void {
-		if ( ! $this->current_user_can_access_search() || ! is_admin() ) {
+		if ( ! $this->current_user_can_access_search() ) {
+			return;
+		}
+
+		if ( ! is_admin() && ! is_admin_bar_showing() ) {
 			return;
 		}
 
@@ -226,4 +239,5 @@ class WP_Loupe_Admin_Search {
 		</div>
 		<?php
 	}
+
 }
