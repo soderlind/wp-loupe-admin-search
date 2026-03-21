@@ -251,6 +251,7 @@ add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_ty
 - [x] AdminQueryIntegrationTest (2 tests — hook registration + short-circuit)
 - [x] RestControllerTest (5 tests — routes, permissions, content, empty query)
 - [x] AdminSearchTest (2 tests — dashboard widget, asset localization)
+- [x] EntityIndexerTest (8 tests — user/comment/plugin indexer hooks + search, query integration hooks)
 - [x] JS tests (3 tests — form submit, modal, no native interception)
 
 ### Documentation
@@ -258,15 +259,16 @@ add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_ty
 - [x] `plan.md` — architecture, schema tables, extensibility
 - [x] `README.md` — user-facing: how it works, indexed fields, filter example
 
-### Future Entity Indexing
+### Entity Indexing
 
-- [ ] Index users — schema defined, needs user indexer + `pre_get_users` hook
-- [ ] Index comments — schema defined, needs comment indexer + `edit-comments.php` hook
-- [ ] Index plugins — schema defined, needs plugin indexer (non-DB source)
-- [ ] Wire future entity indexes into REST scopes (replace `WP_User_Query` / `get_plugins()`)
+- [x] Index users — `WP_Loupe_Admin_User_Indexer` + `pre_get_users` hook
+- [x] Index comments — `WP_Loupe_Admin_Comment_Indexer` + `pre_get_comments` hook
+- [x] Index plugins — `WP_Loupe_Admin_Plugin_Indexer` (non-DB source, full rebuild on change)
+- [x] Wire entity indexes into REST scopes (Loupe-first with fallback)
+- [x] `comments` REST scope added with capability check
 
 ### Other
 
 - [x] Uninstall cleanup — delete `wp-loupe-db/admin/` on plugin uninstall
-- [ ] Admin notice when indexes are stale or schema changes detected
+- [x] Admin notice when indexes are stale or missing
 - [x] WP-CLI command for manual reindex (`wp loupe-admin reindex` + `wp loupe-admin status`)

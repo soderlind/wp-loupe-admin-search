@@ -13,6 +13,11 @@ require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-search.php';
 require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-schema.php';
 require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-indexer.php';
 require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-query-integration.php';
+require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-user-indexer.php';
+require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-comment-indexer.php';
+require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-plugin-indexer.php';
+require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-user-query-integration.php';
+require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-comment-query-integration.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __DIR__ ) . '/' );
@@ -161,6 +166,52 @@ if ( ! class_exists( 'WP_Post' ) ) {
 			$this->ID          = $id;
 			$this->post_type   = $post_type;
 			$this->post_status = $post_status;
+		}
+	}
+}
+
+if ( ! class_exists( 'WP_User_Query' ) ) {
+	class WP_User_Query {
+		/** @var array<string,mixed> */
+		private $params = [];
+
+		/** @param array<string,mixed> $args */
+		public function __construct( array $args = [] ) {
+			$this->params = $args;
+		}
+
+		public function get( string $key ) {
+			return $this->params[ $key ] ?? '';
+		}
+
+		public function set( string $key, $value ): void {
+			$this->params[ $key ] = $value;
+		}
+
+		/** @return array */
+		public function get_results(): array {
+			return [];
+		}
+
+		public function get_total(): int {
+			return 0;
+		}
+	}
+}
+
+if ( ! class_exists( 'WP_Comment_Query' ) ) {
+	class WP_Comment_Query {
+		/** @var array<string,mixed> */
+		public $query_vars = [];
+
+		/** @param array<string,mixed> $args */
+		public function __construct( array $args = [] ) {
+			$this->query_vars = $args;
+		}
+
+		/** @return array */
+		public function get_comments(): array {
+			return [];
 		}
 	}
 }

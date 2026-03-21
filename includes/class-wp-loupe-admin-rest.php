@@ -11,16 +11,37 @@ class WP_Loupe_Admin_REST {
 	/** @var WP_Loupe_Admin_Indexer|null */
 	private $indexer;
 
+	/** @var WP_Loupe_Admin_User_Indexer|null */
+	private $user_indexer;
+
+	/** @var WP_Loupe_Admin_Comment_Indexer|null */
+	private $comment_indexer;
+
+	/** @var WP_Loupe_Admin_Plugin_Indexer|null */
+	private $plugin_indexer;
+
 	/** @var bool */
 	private $routes_registered = false;
 
 	/**
-	 * @param array<int,string>          $post_types Indexed post types.
-	 * @param WP_Loupe_Admin_Indexer|null $indexer    Admin indexer for content searches.
+	 * @param array<int,string>                  $post_types      Indexed post types.
+	 * @param WP_Loupe_Admin_Indexer|null         $indexer         Admin indexer for content searches.
+	 * @param WP_Loupe_Admin_User_Indexer|null    $user_indexer    User indexer.
+	 * @param WP_Loupe_Admin_Comment_Indexer|null $comment_indexer Comment indexer.
+	 * @param WP_Loupe_Admin_Plugin_Indexer|null  $plugin_indexer  Plugin indexer.
 	 */
-	public function __construct( array $post_types, ?WP_Loupe_Admin_Indexer $indexer = null ) {
-		$this->post_types = $post_types;
-		$this->indexer    = $indexer;
+	public function __construct(
+		array $post_types,
+		?WP_Loupe_Admin_Indexer $indexer = null,
+		?WP_Loupe_Admin_User_Indexer $user_indexer = null,
+		?WP_Loupe_Admin_Comment_Indexer $comment_indexer = null,
+		?WP_Loupe_Admin_Plugin_Indexer $plugin_indexer = null
+	) {
+		$this->post_types      = $post_types;
+		$this->indexer         = $indexer;
+		$this->user_indexer    = $user_indexer;
+		$this->comment_indexer = $comment_indexer;
+		$this->plugin_indexer  = $plugin_indexer;
 	}
 
 	/**
@@ -98,6 +119,10 @@ class WP_Loupe_Admin_REST {
 			return current_user_can( 'list_users' ) || current_user_can( 'edit_users' ) || current_user_can( 'manage_options' );
 		}
 
+		if ( 'comments' === $scope ) {
+			return current_user_can( 'moderate_comments' ) || current_user_can( 'edit_posts' ) || current_user_can( 'manage_options' );
+		}
+
 		if ( current_user_can( 'manage_options' ) ) {
 			return true;
 		}
@@ -138,6 +163,10 @@ class WP_Loupe_Admin_REST {
 
 		if ( 'users' === $scope ) {
 			return $this->handle_user_search( $query, $per_page, $page );
+		}
+
+		if ( 'comments' === $scope ) {
+			return $this->handle_comment_search( $query, $per_page, $page );
 		}
 
 		$hits    = $this->search_content( $query );
@@ -202,10 +231,48 @@ class WP_Loupe_Admin_REST {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
+		$all_plugins = get_plugins();
+
+		// Use Loupe plugin indexer when available.
+		if ( $this->plugin_indexer ) {
+			$hits    = $this->plugin_indexer->search( $query );
+			$results = [];
+
+			foreach ( $hits as $hit ) {
+				$plugin_file = $hit[ 'plugin_file' ] ?? '';
+				if ( '' === $plugin_file || ! isset( $all_plugins[ $plugin_file ] ) ) {
+					continue;
+				}
+
+				$plugin_data = $all_plugins[ $plugin_file ];
+				$is_active   = is_plugin_active( $plugin_file );
+
+				$results[] = [
+					'id'            => $plugin_file,
+					'title'         => $plugin_data[ 'Name' ] ?? $plugin_file,
+					'postType'      => 'plugin',
+					'postTypeLabel' => __( 'Plugin', 'wp-loupe-admin' ),
+					'status'        => $is_active ? 'active' : 'inactive',
+					'statusLabel'   => sprintf(
+						/* translators: 1: plugin activation state, 2: version number */
+						__( '%1$s, v%2$s', 'wp-loupe-admin' ),
+						$is_active ? __( 'Active', 'wp-loupe-admin' ) : __( 'Inactive', 'wp-loupe-admin' ),
+						$plugin_data[ 'Version' ] ?? '0'
+					),
+					'editUrl'       => admin_url( 'plugins.php' ),
+					'viewUrl'       => ! empty( $plugin_data[ 'PluginURI' ] ) ? $plugin_data[ 'PluginURI' ] : '',
+					'_score'        => isset( $hit[ '_score' ] ) ? (float) $hit[ '_score' ] : 0.0,
+				];
+			}
+
+			return $this->build_paginated_array_response( $results, $query, $per_page, $page, 'plugins' );
+		}
+
+		// Fallback: substring match.
 		$needle  = strtolower( $query );
 		$results = [];
 
-		foreach ( get_plugins() as $plugin_file => $plugin_data ) {
+		foreach ( $all_plugins as $plugin_file => $plugin_data ) {
 			$haystack = strtolower( implode( ' ', array_filter( [
 				$plugin_data[ 'Name' ] ?? '',
 				$plugin_data[ 'Description' ] ?? '',
@@ -250,6 +317,35 @@ class WP_Loupe_Admin_REST {
 	 * @return \WP_REST_Response
 	 */
 	private function handle_user_search( string $query, int $per_page, int $page ) {
+		// Use Loupe user indexer when available.
+		if ( $this->user_indexer ) {
+			$hits    = $this->user_indexer->search( $query );
+			$results = [];
+
+			foreach ( $hits as $hit ) {
+				$user_id = (int) ( $hit[ 'id' ] ?? 0 );
+				$user    = get_userdata( $user_id );
+				if ( ! $user ) {
+					continue;
+				}
+
+				$results[] = [
+					'id'            => $user_id,
+					'title'         => $user->display_name ?: $user->user_login,
+					'postType'      => 'user',
+					'postTypeLabel' => __( 'User', 'wp-loupe-admin' ),
+					'status'        => implode( ', ', array_map( 'strval', (array) $user->roles ) ),
+					'statusLabel'   => $user->user_email,
+					'editUrl'       => get_edit_user_link( $user_id ),
+					'viewUrl'       => '',
+					'_score'        => isset( $hit[ '_score' ] ) ? (float) $hit[ '_score' ] : 0.0,
+				];
+			}
+
+			return $this->build_paginated_array_response( $results, $query, $per_page, $page, 'users' );
+		}
+
+		// Fallback: WP_User_Query.
 		$user_query = new \WP_User_Query( [
 			'search'         => '*' . $query . '*',
 			'search_columns' => [ 'user_login', 'user_nicename', 'display_name', 'user_email' ],
@@ -280,6 +376,97 @@ class WP_Loupe_Admin_REST {
 		$page        = min( $page, $total_pages );
 
 		return $this->build_response( $results, $query, $per_page, $page, $total_pages, $total, 'users' );
+	}
+
+	/**
+	 * Search comments using Loupe index with fallback to WP_Comment_Query.
+	 *
+	 * @param string $query    Search query.
+	 * @param int    $per_page Results per page.
+	 * @param int    $page     Current page.
+	 * @return \WP_REST_Response
+	 */
+	private function handle_comment_search( string $query, int $per_page, int $page ) {
+		// Use Loupe comment indexer when available.
+		if ( $this->comment_indexer ) {
+			$hits    = $this->comment_indexer->search( $query );
+			$results = [];
+
+			foreach ( $hits as $hit ) {
+				$comment_id = (int) ( $hit[ 'id' ] ?? 0 );
+				$comment    = get_comment( $comment_id );
+				if ( ! $comment ) {
+					continue;
+				}
+
+				$results[] = [
+					'id'            => $comment_id,
+					'title'         => wp_trim_words( wp_strip_all_tags( (string) $comment->comment_content ), 12, '...' ),
+					'postType'      => 'comment',
+					'postTypeLabel' => __( 'Comment', 'wp-loupe-admin' ),
+					'status'        => $comment->comment_approved,
+					'statusLabel'   => $this->get_comment_status_label( $comment->comment_approved ),
+					'editUrl'       => admin_url( 'comment.php?action=editcomment&c=' . $comment_id ),
+					'viewUrl'       => get_comment_link( $comment_id ),
+					'authorName'    => (string) $comment->comment_author,
+					'_score'        => isset( $hit[ '_score' ] ) ? (float) $hit[ '_score' ] : 0.0,
+				];
+			}
+
+			return $this->build_paginated_array_response( $results, $query, $per_page, $page, 'comments' );
+		}
+
+		// Fallback: WP_Comment_Query.
+		$comment_query = new \WP_Comment_Query( [
+			'search'  => $query,
+			'number'  => $per_page,
+			'offset'  => ( $page - 1 ) * $per_page,
+			'orderby' => 'comment_date_gmt',
+			'order'   => 'DESC',
+			'status'  => 'all',
+		] );
+
+		$results = [];
+
+		foreach ( (array) $comment_query->get_comments() as $comment ) {
+			$results[] = [
+				'id'            => (int) $comment->comment_ID,
+				'title'         => wp_trim_words( wp_strip_all_tags( (string) $comment->comment_content ), 12, '...' ),
+				'postType'      => 'comment',
+				'postTypeLabel' => __( 'Comment', 'wp-loupe-admin' ),
+				'status'        => $comment->comment_approved,
+				'statusLabel'   => $this->get_comment_status_label( $comment->comment_approved ),
+				'editUrl'       => admin_url( 'comment.php?action=editcomment&c=' . (int) $comment->comment_ID ),
+				'viewUrl'       => get_comment_link( (int) $comment->comment_ID ),
+				'authorName'    => (string) $comment->comment_author,
+				'_score'        => 0.0,
+			];
+		}
+
+		$total       = (int) ( $comment_query->found_comments ?? count( $results ) );
+		$total_pages = max( 1, (int) ceil( $total / $per_page ) );
+		$page        = min( $page, $total_pages );
+
+		return $this->build_response( $results, $query, $per_page, $page, $total_pages, $total, 'comments' );
+	}
+
+	/**
+	 * Get a human-readable comment status label.
+	 *
+	 * @param string $status Comment approved value.
+	 * @return string
+	 */
+	private function get_comment_status_label( string $status ): string {
+		$map = [
+			'1'        => __( 'Approved', 'wp-loupe-admin' ),
+			'0'        => __( 'Pending', 'wp-loupe-admin' ),
+			'spam'     => __( 'Spam', 'wp-loupe-admin' ),
+			'trash'    => __( 'Trash', 'wp-loupe-admin' ),
+			'approved' => __( 'Approved', 'wp-loupe-admin' ),
+			'hold'     => __( 'Pending', 'wp-loupe-admin' ),
+		];
+
+		return $map[ $status ] ?? $status;
 	}
 
 	/**
