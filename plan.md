@@ -267,6 +267,6 @@ add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_ty
 
 ### Other
 
-- [ ] Uninstall cleanup — delete `wp-loupe-db/admin/` on plugin uninstall
+- [x] Uninstall cleanup — delete `wp-loupe-db/admin/` on plugin uninstall
 - [ ] Admin notice when indexes are stale or schema changes detected
-- [ ] WP-CLI command for manual reindex (`wp loupe-admin reindex`)
+- [x] WP-CLI command for manual reindex (`wp loupe-admin reindex` + `wp loupe-admin status`)
