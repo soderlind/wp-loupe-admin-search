@@ -52,14 +52,28 @@ Yes — use the `wp_loupe_admin_schema` filter. See the [developer documentation
 == Changelog ==
 
 = 1.0.0 =
-* Stable release.
-* Dashboard search widget, admin bar launcher, and modal search overlay.
-* Search scopes: content, users, plugins, and comments.
-* Native list table search interception for posts, users, and comments.
-* Entity indexing for users, comments, and plugins.
-* WP-CLI commands: `wp loupe-admin reindex` and `wp loupe-admin status`.
+* User indexing with native Users list table search interception.
+* Comment indexing with native Comments list table search interception.
+* Plugin indexing (non-DB source, full rebuild on change).
+* Comments REST search scope with capability check.
 * Admin notice when indexes are stale or missing.
-* Full PHP and JavaScript test coverage.
+* GitHub plugin updater with release asset workflows.
+* User-friendly README with developer docs split into `docs/developer.md`.
+* REST search scopes now use Loupe-first with fallback.
+* Release zip renamed from `wp-loupe-admin.zip` to `wp-loupe-admin-search.zip`.
+
+= 0.3.0 =
+* Admin-owned schema with `wp_loupe_admin_schema` filter.
+* Separate admin indexes at `wp-loupe-db/admin/{post_type}/`.
+* Indexes all admin post statuses (publish, draft, pending, private, future).
+* Author name virtual field, dynamic taxonomy fields, post meta fallback.
+* Native list table search interception via `posts_pre_query`.
+* Uninstall cleanup for admin index folder.
+* WP-CLI commands: `wp loupe-admin reindex` and `wp loupe-admin status`.
 
 = 0.1.0 =
 * Initial release.
+* Dashboard search widget, admin bar launcher, and modal search overlay.
+* Admin REST search endpoint with content, users, and plugin scopes.
+* PHP and JavaScript test setup.
+* JavaScript build and i18n tooling.
