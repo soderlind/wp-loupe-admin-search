@@ -38,7 +38,7 @@ jobs:
           filename: 'wp-loupe-admin-search.zip'
           exclusions: >-
             *.git* /*.github/* /*.vscode/* /*node_modules/* /*tests/*
-            /src/js/* /scripts/*
+            /src/* /scripts/*
             composer.json composer.lock package.json package-lock.json
             phpunit.xml phpunit.xml.dist phpcs.xml vitest.config.mjs i18n-map.json
             .editorconfig .eslintignore .phpunit.result.cache .eslintrc.js .gitignore .gitattributes
