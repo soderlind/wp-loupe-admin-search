@@ -55,6 +55,12 @@ class WP_Loupe_Admin_Loader {
 			$admin_search = new WP_Loupe_Admin_Search( $this->post_types );
 			$admin_search->register();
 		}
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-cli.php';
+
+			\WP_CLI::add_command( 'loupe-admin', new WP_Loupe_Admin_CLI( $admin_indexer, $this->post_types ) );
+		}
 	}
 
 	/**
