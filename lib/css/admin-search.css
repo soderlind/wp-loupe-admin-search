@@ -52,7 +52,7 @@
 	border: 1px solid #dcdcde;
 	border-radius: 4px;
 	padding: 12px;
-	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	display: grid;
 	gap: 4px;
 }
@@ -116,19 +116,19 @@
 .wp-loupe-admin-search-backdrop {
 	position: absolute;
 	inset: 0;
-	background: rgba( 17, 24, 39, 0.48 );
-	backdrop-filter: blur( 3px );
+	background: rgba(17, 24, 39, 0.48);
+	backdrop-filter: blur(3px);
 }
 
 .wp-loupe-admin-search-panel {
 	position: relative;
-	width: min( 760px, 100% );
-	max-height: min( 80vh, 720px );
+	width: min(760px, 100%);
+	max-height: min(80vh, 720px);
 	overflow: hidden;
 	background: #f6f7f7;
 	border: 1px solid #c3c4c7;
 	border-radius: 8px;
-	box-shadow: 0 20px 48px rgba( 0, 0, 0, 0.24 );
+	box-shadow: 0 20px 48px rgba(0, 0, 0, 0.24);
 	padding: 20px;
 	display: grid;
 	gap: 12px;
@@ -162,7 +162,7 @@ body.wp-loupe-admin-search-open {
 	overflow: hidden;
 }
 
-@media ( max-width: 782px ) {
+@media (max-width: 782px) {
 	.wp-loupe-admin-search-row {
 		flex-direction: column;
 		align-items: stretch;

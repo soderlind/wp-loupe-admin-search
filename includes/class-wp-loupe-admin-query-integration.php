@@ -58,17 +58,17 @@ class WP_Loupe_Admin_Query_Integration {
 			$this->indexer->search( $query_string, $post_types ),
 			static function ( $hit ) use ( $post_types ): bool {
 				return is_array( $hit )
-					&& ! empty( $hit['id'] )
-					&& ! empty( $hit['post_type'] )
-					&& in_array( (string) $hit['post_type'], $post_types, true );
+					&& ! empty( $hit[ 'id' ] )
+					&& ! empty( $hit[ 'post_type' ] )
+					&& in_array( (string) $hit[ 'post_type' ], $post_types, true );
 			}
 		) );
 
-		$per_page    = max( 1, (int) $query->get( 'posts_per_page' ) );
+		$per_page     = max( 1, (int) $query->get( 'posts_per_page' ) );
 		$current_page = max( 1, (int) $query->get( 'paged' ) );
-		$total       = count( $hits );
-		$offset      = ( $current_page - 1 ) * $per_page;
-		$page_hits   = array_slice( $hits, $offset, $per_page );
+		$total        = count( $hits );
+		$offset       = ( $current_page - 1 ) * $per_page;
+		$page_hits    = array_slice( $hits, $offset, $per_page );
 
 		$query->found_posts   = $total;
 		$query->max_num_pages = max( 1, (int) ceil( $total / $per_page ) );
@@ -134,7 +134,7 @@ class WP_Loupe_Admin_Query_Integration {
 		$this->is_handling_posts_query = true;
 
 		foreach ( $hits as $hit ) {
-			$post = get_post( (int) $hit['id'] );
+			$post = get_post( (int) $hit[ 'id' ] );
 			if ( $post instanceof \WP_Post ) {
 				$posts[] = $post;
 			}

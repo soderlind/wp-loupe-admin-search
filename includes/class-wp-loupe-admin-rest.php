@@ -144,12 +144,12 @@ class WP_Loupe_Admin_REST {
 		$results = [];
 
 		foreach ( (array) $hits as $hit ) {
-			if ( empty( $hit['id'] ) || empty( $hit['post_type'] ) ) {
+			if ( empty( $hit[ 'id' ] ) || empty( $hit[ 'post_type' ] ) ) {
 				continue;
 			}
 
-			$post_id   = (int) $hit['id'];
-			$post_type = (string) $hit['post_type'];
+			$post_id   = (int) $hit[ 'id' ];
+			$post_type = (string) $hit[ 'post_type' ];
 			$post      = get_post( $post_id );
 			if ( ! $post || $post->post_type !== $post_type ) {
 				continue;
@@ -176,7 +176,7 @@ class WP_Loupe_Admin_REST {
 				'excerpt'       => $this->get_result_excerpt( $post_id ),
 				'authorName'    => $author && isset( $author->display_name ) ? (string) $author->display_name : '',
 				'dateLabel'     => get_the_date( get_option( 'date_format' ), $post_id ),
-				'_score'        => isset( $hit['_score'] ) ? (float) $hit['_score'] : 0.0,
+				'_score'        => isset( $hit[ '_score' ] ) ? (float) $hit[ '_score' ] : 0.0,
 			];
 		}
 
@@ -207,10 +207,10 @@ class WP_Loupe_Admin_REST {
 
 		foreach ( get_plugins() as $plugin_file => $plugin_data ) {
 			$haystack = strtolower( implode( ' ', array_filter( [
-				$plugin_data['Name'] ?? '',
-				$plugin_data['Description'] ?? '',
-				$plugin_data['Author'] ?? '',
-				$plugin_data['TextDomain'] ?? '',
+				$plugin_data[ 'Name' ] ?? '',
+				$plugin_data[ 'Description' ] ?? '',
+				$plugin_data[ 'Author' ] ?? '',
+				$plugin_data[ 'TextDomain' ] ?? '',
 				$plugin_file,
 			] ) ) );
 
@@ -222,7 +222,7 @@ class WP_Loupe_Admin_REST {
 
 			$results[] = [
 				'id'            => $plugin_file,
-				'title'         => $plugin_data['Name'] ?? $plugin_file,
+				'title'         => $plugin_data[ 'Name' ] ?? $plugin_file,
 				'postType'      => 'plugin',
 				'postTypeLabel' => __( 'Plugin', 'wp-loupe-admin' ),
 				'status'        => $is_active ? 'active' : 'inactive',
@@ -230,10 +230,10 @@ class WP_Loupe_Admin_REST {
 					/* translators: 1: plugin activation state, 2: version number */
 					__( '%1$s, v%2$s', 'wp-loupe-admin' ),
 					$is_active ? __( 'Active', 'wp-loupe-admin' ) : __( 'Inactive', 'wp-loupe-admin' ),
-					$plugin_data['Version'] ?? '0'
+					$plugin_data[ 'Version' ] ?? '0'
 				),
 				'editUrl'       => admin_url( 'plugins.php' ),
-				'viewUrl'       => ! empty( $plugin_data['PluginURI'] ) ? $plugin_data['PluginURI'] : '',
+				'viewUrl'       => ! empty( $plugin_data[ 'PluginURI' ] ) ? $plugin_data[ 'PluginURI' ] : '',
 				'_score'        => 0.0,
 			];
 		}

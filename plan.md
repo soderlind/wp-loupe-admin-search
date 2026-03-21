@@ -200,3 +200,73 @@ add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_ty
     return $fields;
 }, 10, 2 );
 ```
+
+---
+
+## Checklist
+
+### Infrastructure
+
+- [x] Bootstrap loader (singleton, request-scoped, `plugins_loaded` priority 20)
+- [x] Dependency check for `wp-loupe` active
+- [x] Admin-only code behind `is_admin()`
+
+### Admin Indexes
+
+- [x] `WP_Loupe_Admin_Schema` — own field definitions per entity type
+- [x] `wp_loupe_admin_schema` filter for extensibility
+- [x] `WP_Loupe_Admin_Indexer` — separate indexes at `wp-loupe-db/admin/{post_type}/`
+- [x] Index all admin statuses (publish, draft, pending, private, future)
+- [x] `author_name` virtual field resolved from `get_userdata()`
+- [x] Dynamic taxonomy fields from `get_object_taxonomies()`
+- [x] Post meta fallback for custom schema fields
+- [x] Auto-rebuild on first admin load via `needs_initial_index()`
+- [x] Hooks: `save_post_{type}`, `wp_trash_post` for incremental updates
+
+### Native Search Interception
+
+- [x] `WP_Loupe_Admin_Query_Integration` — `posts_pre_query` filter
+- [x] Intercept `edit.php` search with Loupe results in `WP_List_Table`
+- [x] Pagination via `found_posts` / `max_num_pages`
+- [x] Re-entrancy guard (`$is_handling_posts_query`)
+
+### REST API
+
+- [x] `wp-loupe-admin/v1/search` endpoint with scope parameter
+- [x] Content scope wired to admin indexer (not main `WP_Loupe_Search_Engine`)
+- [x] Users scope via `WP_User_Query`
+- [x] Plugins scope via `get_plugins()` substring match
+- [x] Capability checks per scope (`edit_posts`, `list_users`, `activate_plugins`)
+
+### Admin UI
+
+- [x] Dashboard widget
+- [x] Admin bar launcher
+- [x] Modal search with scope switcher (content / users / plugins)
+- [x] Pagination and focus management
+
+### Testing
+
+- [x] AdminSchemaTest (7 tests — all entity types + filter)
+- [x] AdminQueryIntegrationTest (2 tests — hook registration + short-circuit)
+- [x] RestControllerTest (5 tests — routes, permissions, content, empty query)
+- [x] AdminSearchTest (2 tests — dashboard widget, asset localization)
+- [x] JS tests (3 tests — form submit, modal, no native interception)
+
+### Documentation
+
+- [x] `plan.md` — architecture, schema tables, extensibility
+- [x] `README.md` — user-facing: how it works, indexed fields, filter example
+
+### Future Entity Indexing
+
+- [ ] Index users — schema defined, needs user indexer + `pre_get_users` hook
+- [ ] Index comments — schema defined, needs comment indexer + `edit-comments.php` hook
+- [ ] Index plugins — schema defined, needs plugin indexer (non-DB source)
+- [ ] Wire future entity indexes into REST scopes (replace `WP_User_Query` / `get_plugins()`)
+
+### Other
+
+- [ ] Uninstall cleanup — delete `wp-loupe-db/admin/` on plugin uninstall
+- [ ] Admin notice when indexes are stale or schema changes detected
+- [ ] WP-CLI command for manual reindex (`wp loupe-admin reindex`)

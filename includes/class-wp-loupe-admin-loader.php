@@ -65,8 +65,8 @@ class WP_Loupe_Admin_Loader {
 	private function setup_post_types(): void {
 		$options = get_option( 'wp_loupe_custom_post_types', [] );
 
-		if ( ! empty( $options ) && isset( $options['wp_loupe_post_type_field'] ) ) {
-			$this->post_types = (array) $options['wp_loupe_post_type_field'];
+		if ( ! empty( $options ) && isset( $options[ 'wp_loupe_post_type_field' ] ) ) {
+			$this->post_types = (array) $options[ 'wp_loupe_post_type_field' ];
 		} else {
 			$this->post_types = [ 'post', 'page' ];
 		}

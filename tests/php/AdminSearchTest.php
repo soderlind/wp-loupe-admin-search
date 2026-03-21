@@ -67,10 +67,10 @@ final class AdminSearchTest extends TestCase {
 				'wpLoupeAdminSearch',
 				\Mockery::on(
 					static function ( array $payload ): bool {
-						return '/wp-loupe-admin/v1/search' === $payload['path']
-							&& 'test-nonce' === $payload['nonce']
-							&& isset( $payload['labels']['content'], $payload['labels']['users'], $payload['labels']['plugins'] )
-							&& 8 === $payload['perPage'];
+						return '/wp-loupe-admin/v1/search' === $payload[ 'path' ]
+							&& 'test-nonce' === $payload[ 'nonce' ]
+							&& isset( $payload[ 'labels' ][ 'content' ], $payload[ 'labels' ][ 'users' ], $payload[ 'labels' ][ 'plugins' ] )
+							&& 8 === $payload[ 'perPage' ];
 					}
 				)
 			);

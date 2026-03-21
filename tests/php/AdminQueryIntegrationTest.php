@@ -21,7 +21,7 @@ final class AdminQueryIntegrationTest extends TestCase {
 	}
 
 	public function test_registers_posts_pre_query_hook(): void {
-		$indexer     = $this->createMock( WP_Loupe_Admin_Indexer::class );
+		$indexer     = $this->createMock( WP_Loupe_Admin_Indexer::class);
 		$integration = new WP_Loupe_Admin_Query_Integration( [ 'post' ], $indexer );
 
 		Functions\expect( 'add_filter' )
@@ -33,7 +33,7 @@ final class AdminQueryIntegrationTest extends TestCase {
 	}
 
 	public function test_short_circuits_supported_admin_post_searches_with_wp_loupe_hits(): void {
-		$indexer = $this->createMock( WP_Loupe_Admin_Indexer::class );
+		$indexer = $this->createMock( WP_Loupe_Admin_Indexer::class);
 		$indexer->method( 'search' )
 			->with( 'hello', [ 'post' ] )
 			->willReturn( [
@@ -67,6 +67,6 @@ final class AdminQueryIntegrationTest extends TestCase {
 		self::assertCount( 2, $result );
 		self::assertSame( 2, $query->found_posts );
 		self::assertSame( 1, $query->max_num_pages );
-		self::assertSame( 10, $result[0]->ID );
+		self::assertSame( 10, $result[ 0 ]->ID );
 	}
 }

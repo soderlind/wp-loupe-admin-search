@@ -35,21 +35,21 @@ final class AdminSchemaTest extends TestCase {
 		self::assertArrayHasKey( 'author_name', $fields );
 
 		// Verify searchable/filterable/sortable/weight shape.
-		self::assertTrue( $fields['post_title']['searchable'] );
-		self::assertTrue( $fields['post_title']['filterable'] );
-		self::assertTrue( $fields['post_title']['sortable'] );
-		self::assertSame( 3.0, $fields['post_title']['weight'] );
+		self::assertTrue( $fields[ 'post_title' ][ 'searchable' ] );
+		self::assertTrue( $fields[ 'post_title' ][ 'filterable' ] );
+		self::assertTrue( $fields[ 'post_title' ][ 'sortable' ] );
+		self::assertSame( 3.0, $fields[ 'post_title' ][ 'weight' ] );
 
 		// author_name is searchable + filterable + sortable.
-		self::assertTrue( $fields['author_name']['searchable'] );
-		self::assertTrue( $fields['author_name']['filterable'] );
-		self::assertTrue( $fields['author_name']['sortable'] );
-		self::assertSame( 2.0, $fields['author_name']['weight'] );
+		self::assertTrue( $fields[ 'author_name' ][ 'searchable' ] );
+		self::assertTrue( $fields[ 'author_name' ][ 'filterable' ] );
+		self::assertTrue( $fields[ 'author_name' ][ 'sortable' ] );
+		self::assertSame( 2.0, $fields[ 'author_name' ][ 'weight' ] );
 
 		// post_status is filterable only.
-		self::assertFalse( $fields['post_status']['searchable'] );
-		self::assertTrue( $fields['post_status']['filterable'] );
-		self::assertFalse( $fields['post_status']['sortable'] );
+		self::assertFalse( $fields[ 'post_status' ][ 'searchable' ] );
+		self::assertTrue( $fields[ 'post_status' ][ 'filterable' ] );
+		self::assertFalse( $fields[ 'post_status' ][ 'sortable' ] );
 	}
 
 	public function test_post_type_includes_taxonomy_fields_for_post(): void {
@@ -61,9 +61,9 @@ final class AdminSchemaTest extends TestCase {
 
 		self::assertArrayHasKey( 'taxonomy_category', $fields );
 		self::assertArrayHasKey( 'taxonomy_post_tag', $fields );
-		self::assertTrue( $fields['taxonomy_category']['searchable'] );
-		self::assertTrue( $fields['taxonomy_category']['filterable'] );
-		self::assertSame( 1.5, $fields['taxonomy_category']['weight'] );
+		self::assertTrue( $fields[ 'taxonomy_category' ][ 'searchable' ] );
+		self::assertTrue( $fields[ 'taxonomy_category' ][ 'filterable' ] );
+		self::assertSame( 1.5, $fields[ 'taxonomy_category' ][ 'weight' ] );
 	}
 
 	public function test_custom_post_type_has_no_taxonomy_fallback(): void {
@@ -90,8 +90,8 @@ final class AdminSchemaTest extends TestCase {
 		self::assertArrayHasKey( 'user_login', $fields );
 		self::assertArrayHasKey( 'user_email', $fields );
 		self::assertArrayHasKey( 'user_role', $fields );
-		self::assertFalse( $fields['user_role']['searchable'] );
-		self::assertTrue( $fields['user_role']['filterable'] );
+		self::assertFalse( $fields[ 'user_role' ][ 'searchable' ] );
+		self::assertTrue( $fields[ 'user_role' ][ 'filterable' ] );
 	}
 
 	public function test_comment_entity_returns_comment_fields(): void {
@@ -124,7 +124,7 @@ final class AdminSchemaTest extends TestCase {
 			->with( 'wp_loupe_admin_schema', \Mockery::type( 'array' ), 'post' )
 			->andReturnUsing(
 				static function ( string $hook, array $fields ): array {
-					$fields['my_custom'] = [
+					$fields[ 'my_custom' ] = [
 						'searchable' => true,
 						'filterable' => false,
 						'sortable'   => false,
@@ -138,6 +138,6 @@ final class AdminSchemaTest extends TestCase {
 		$fields = $schema->get_fields( 'post' );
 
 		self::assertArrayHasKey( 'my_custom', $fields );
-		self::assertTrue( $fields['my_custom']['searchable'] );
+		self::assertTrue( $fields[ 'my_custom' ][ 'searchable' ] );
 	}
 }

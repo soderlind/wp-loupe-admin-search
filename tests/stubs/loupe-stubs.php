@@ -10,25 +10,39 @@
 namespace Loupe\Loupe\Config {
 	class TypoTolerance {
 		/** @return self */
-		public static function create(): self { return new self(); }
+		public static function create(): self {
+			return new self();
+		}
 
 		/** @return self */
-		public static function disabled(): self { return new self(); }
+		public static function disabled(): self {
+			return new self();
+		}
 
 		/** @return self */
-		public function withAlphabetSize( $s ): self { return $this; }
+		public function withAlphabetSize( $s ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withIndexLength( $l ): self { return $this; }
+		public function withIndexLength( $l ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withFirstCharTypoCountsDouble( bool $v ): self { return $this; }
+		public function withFirstCharTypoCountsDouble( bool $v ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withEnabledForPrefixSearch( bool $v ): self { return $this; }
+		public function withEnabledForPrefixSearch( bool $v ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withTypoThresholds( array $t ): self { return $this; }
+		public function withTypoThresholds( array $t ): self {
+			return $this;
+		}
 	}
 }
 
@@ -38,40 +52,62 @@ namespace Loupe\Loupe {
 
 	class Configuration {
 		/** @return self */
-		public static function create(): self { return new self(); }
+		public static function create(): self {
+			return new self();
+		}
 
 		/** @return self */
-		public function withPrimaryKey( string $k ): self { return $this; }
+		public function withPrimaryKey( string $k ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withSearchableAttributes( array $a ): self { return $this; }
+		public function withSearchableAttributes( array $a ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withFilterableAttributes( array $a ): self { return $this; }
+		public function withFilterableAttributes( array $a ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withSortableAttributes( array $a ): self { return $this; }
+		public function withSortableAttributes( array $a ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withMaxQueryTokens( int $n ): self { return $this; }
+		public function withMaxQueryTokens( int $n ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withMinTokenLengthForPrefixSearch( int $n ): self { return $this; }
+		public function withMinTokenLengthForPrefixSearch( int $n ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withLanguages( array $l ): self { return $this; }
+		public function withLanguages( array $l ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withTypoTolerance( TypoTolerance $t ): self { return $this; }
+		public function withTypoTolerance( TypoTolerance $t ): self {
+			return $this;
+		}
 	}
 
 	class LoupeFactory {
-		public function create( string $path, Configuration $config ): Loupe { return new Loupe(); }
+		public function create( string $path, Configuration $config ): Loupe {
+			return new Loupe();
+		}
 	}
 
 	class Loupe {
 		/** @return SearchResult */
-		public function search( SearchParameters $p ): SearchResult { return new SearchResult(); }
+		public function search( SearchParameters $p ): SearchResult {
+			return new SearchResult();
+		}
 
 		public function addDocument( array $d ): void {}
 
@@ -84,23 +120,35 @@ namespace Loupe\Loupe {
 
 	class SearchParameters {
 		/** @return self */
-		public static function create(): self { return new self(); }
+		public static function create(): self {
+			return new self();
+		}
 
 		/** @return self */
-		public function withQuery( string $q ): self { return $this; }
+		public function withQuery( string $q ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withAttributesToRetrieve( array $a ): self { return $this; }
+		public function withAttributesToRetrieve( array $a ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withShowRankingScore( bool $b ): self { return $this; }
+		public function withShowRankingScore( bool $b ): self {
+			return $this;
+		}
 
 		/** @return self */
-		public function withLimit( int $l ): self { return $this; }
+		public function withLimit( int $l ): self {
+			return $this;
+		}
 	}
 
 	class SearchResult {
 		/** @return array<string,mixed> */
-		public function toArray(): array { return [ 'hits' => [] ]; }
+		public function toArray(): array {
+			return [ 'hits' => [] ];
+		}
 	}
 }

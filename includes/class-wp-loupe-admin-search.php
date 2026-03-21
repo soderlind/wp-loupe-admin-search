@@ -170,10 +170,12 @@ class WP_Loupe_Admin_Search {
 		?>
 		<div id="wp-loupe-admin-search-modal" class="wp-loupe-admin-search-modal" hidden>
 			<div class="wp-loupe-admin-search-backdrop" data-wp-loupe-close="1"></div>
-			<div class="wp-loupe-admin-search-panel" role="dialog" aria-modal="true" aria-labelledby="wp-loupe-admin-search-title" tabindex="-1">
+			<div class="wp-loupe-admin-search-panel" role="dialog" aria-modal="true"
+				aria-labelledby="wp-loupe-admin-search-title" tabindex="-1">
 				<div class="wp-loupe-admin-search-header">
 					<h2 id="wp-loupe-admin-search-title"><?php esc_html_e( 'WP Loupe Search', 'wp-loupe-admin' ); ?></h2>
-					<button type="button" class="button-link" data-wp-loupe-close="1" aria-label="<?php esc_attr_e( 'Close search', 'wp-loupe-admin' ); ?>">&times;</button>
+					<button type="button" class="button-link" data-wp-loupe-close="1"
+						aria-label="<?php esc_attr_e( 'Close search', 'wp-loupe-admin' ); ?>">&times;</button>
 				</div>
 				<?php
 				$this->render_search_shell(
@@ -200,7 +202,8 @@ class WP_Loupe_Admin_Search {
 		?>
 		<div class="wp-loupe-admin-search-shell" data-wp-loupe-search-shell="<?php echo esc_attr( $context ); ?>">
 			<form class="wp-loupe-admin-search-form" data-wp-loupe-search-form="<?php echo esc_attr( $context ); ?>">
-				<label class="screen-reader-text" for="<?php echo esc_attr( $form_id ); ?>"><?php echo esc_html( $label ); ?></label>
+				<label class="screen-reader-text"
+					for="<?php echo esc_attr( $form_id ); ?>"><?php echo esc_html( $label ); ?></label>
 				<div class="wp-loupe-admin-search-row">
 					<select name="scope" aria-label="<?php esc_attr_e( 'Search scope', 'wp-loupe-admin' ); ?>">
 						<option value="content"><?php esc_html_e( 'Content', 'wp-loupe-admin' ); ?></option>
@@ -211,15 +214,11 @@ class WP_Loupe_Admin_Search {
 							<option value="plugins"><?php esc_html_e( 'Plugins', 'wp-loupe-admin' ); ?></option>
 						<?php endif; ?>
 					</select>
-					<input
-						type="search"
-						id="<?php echo esc_attr( $form_id ); ?>"
-						class="regular-text"
-						name="q"
+					<input type="search" id="<?php echo esc_attr( $form_id ); ?>" class="regular-text" name="q"
 						placeholder="<?php esc_attr_e( 'Search content, users, plugins...', 'wp-loupe-admin' ); ?>"
-						autocomplete="off"
-					/>
-					<button type="submit" class="button button-primary"><?php esc_html_e( 'Search', 'wp-loupe-admin' ); ?></button>
+						autocomplete="off" />
+					<button type="submit"
+						class="button button-primary"><?php esc_html_e( 'Search', 'wp-loupe-admin' ); ?></button>
 				</div>
 			</form>
 			<p class="description"><?php echo esc_html( $help ); ?></p>

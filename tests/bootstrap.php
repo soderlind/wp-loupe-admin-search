@@ -171,8 +171,7 @@ if ( ! class_exists( 'WP_Loupe_Search_Engine_Test_Double' ) ) {
 		public static $hits = [];
 
 		/** @param array<int,string> $post_types */
-		public function __construct( array $post_types ) {
-		}
+		public function __construct( array $post_types ) {}
 
 		/**
 		 * @param string $query Search query.

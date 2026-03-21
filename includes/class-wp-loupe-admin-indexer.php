@@ -81,7 +81,7 @@ class WP_Loupe_Admin_Indexer {
 
 			$retrievable = [ 'id' ];
 			foreach ( $fields as $field_name => $settings ) {
-				if ( ! empty( $settings['searchable'] ) || ! empty( $settings['filterable'] ) ) {
+				if ( ! empty( $settings[ 'searchable' ] ) || ! empty( $settings[ 'filterable' ] ) ) {
 					$retrievable[] = $field_name;
 				}
 			}
@@ -95,25 +95,25 @@ class WP_Loupe_Admin_Indexer {
 
 				$result   = $this->loupe[ $post_type ]->search( $params );
 				$arr      = $result->toArray();
-				$tmp_hits = isset( $arr['hits'] ) && is_array( $arr['hits'] ) ? $arr['hits'] : [];
+				$tmp_hits = isset( $arr[ 'hits' ] ) && is_array( $arr[ 'hits' ] ) ? $arr[ 'hits' ] : [];
 
 				foreach ( $tmp_hits as $hit ) {
 					if ( ! is_array( $hit ) ) {
 						continue;
 					}
-					if ( isset( $hit['_rankingScore'] ) && ! isset( $hit['_score'] ) ) {
-						$hit['_score'] = $hit['_rankingScore'];
+					if ( isset( $hit[ '_rankingScore' ] ) && ! isset( $hit[ '_score' ] ) ) {
+						$hit[ '_score' ] = $hit[ '_rankingScore' ];
 					}
-					$hit['post_type'] = $post_type;
+					$hit[ 'post_type' ] = $post_type;
 					$hits[]           = $hit;
 				}
-			} catch ( \Throwable $e ) {
+			} catch (\Throwable $e) {
 				continue;
 			}
 		}
 
 		usort( $hits, static function ( array $a, array $b ): int {
-			return ( $b['_score'] ?? 0 ) <=> ( $a['_score'] ?? 0 );
+			return ( $b[ '_score' ] ?? 0 ) <=> ( $a[ '_score' ] ?? 0 );
 		} );
 
 		return $hits;
@@ -165,7 +165,7 @@ class WP_Loupe_Admin_Indexer {
 
 		try {
 			$loupe->deleteDocument( $post_id );
-		} catch ( \Throwable $e ) {
+		} catch (\Throwable $e) {
 			// Silently ignore — document may not exist in admin index.
 		}
 	}
@@ -186,7 +186,7 @@ class WP_Loupe_Admin_Indexer {
 
 			try {
 				$loupe->deleteAllDocuments();
-			} catch ( \Throwable $e ) {
+			} catch (\Throwable $e) {
 				// If schema mismatch, delete on-disk and recreate.
 				$this->delete_admin_index_for_post_type( $post_type );
 				$this->init_loupe_instances();
@@ -234,7 +234,7 @@ class WP_Loupe_Admin_Indexer {
 				if ( $stmt && 0 === (int) $stmt->fetchColumn() ) {
 					return true;
 				}
-			} catch ( \Throwable $e ) {
+			} catch (\Throwable $e) {
 				return true;
 			}
 		}
@@ -291,18 +291,18 @@ class WP_Loupe_Admin_Indexer {
 				continue;
 			}
 
-			$searchable  = [];
-			$filterable  = [];
-			$sortable    = [];
+			$searchable = [];
+			$filterable = [];
+			$sortable   = [];
 
 			foreach ( $fields as $field_name => $settings ) {
-				if ( ! empty( $settings['searchable'] ) ) {
+				if ( ! empty( $settings[ 'searchable' ] ) ) {
 					$searchable[] = $field_name;
 				}
-				if ( ! empty( $settings['filterable'] ) ) {
+				if ( ! empty( $settings[ 'filterable' ] ) ) {
 					$filterable[] = $field_name;
 				}
-				if ( ! empty( $settings['sortable'] ) ) {
+				if ( ! empty( $settings[ 'sortable' ] ) ) {
 					$sortable[] = $field_name;
 				}
 			}
@@ -312,9 +312,9 @@ class WP_Loupe_Admin_Indexer {
 				->withSearchableAttributes( $searchable )
 				->withFilterableAttributes( $filterable )
 				->withSortableAttributes( $sortable )
-				->withMaxQueryTokens( $advanced['max_query_tokens'] ?? 12 )
-				->withMinTokenLengthForPrefixSearch( $advanced['min_prefix_length'] ?? 3 )
-				->withLanguages( $advanced['languages'] ?? [ 'en' ] )
+				->withMaxQueryTokens( $advanced[ 'max_query_tokens' ] ?? 12 )
+				->withMinTokenLengthForPrefixSearch( $advanced[ 'min_prefix_length' ] ?? 3 )
+				->withLanguages( $advanced[ 'languages' ] ?? [ 'en' ] )
 				->withTypoTolerance( $this->build_typo_tolerance( $advanced ) );
 
 			$factory = new LoupeFactory();
@@ -324,7 +324,7 @@ class WP_Loupe_Admin_Indexer {
 					$this->get_admin_db_path( $post_type ),
 					$configuration
 				);
-			} catch ( \Throwable $e ) {
+			} catch (\Throwable $e) {
 				// Index may be corrupt — delete and retry once.
 				$this->delete_admin_index_for_post_type( $post_type );
 
@@ -333,7 +333,7 @@ class WP_Loupe_Admin_Indexer {
 						$this->get_admin_db_path( $post_type ),
 						$configuration
 					);
-				} catch ( \Throwable $e2 ) {
+				} catch (\Throwable $e2) {
 					// Give up for this post type.
 				}
 			}
@@ -347,24 +347,24 @@ class WP_Loupe_Admin_Indexer {
 	 * @return TypoTolerance
 	 */
 	private function build_typo_tolerance( array $settings ): TypoTolerance {
-		if ( empty( $settings['typo_enabled'] ) ) {
+		if ( empty( $settings[ 'typo_enabled' ] ) ) {
 			return TypoTolerance::disabled();
 		}
 
 		$typo = TypoTolerance::create();
 
-		if ( ! empty( $settings['alphabet_size'] ) ) {
-			$typo->withAlphabetSize( $settings['alphabet_size'] );
+		if ( ! empty( $settings[ 'alphabet_size' ] ) ) {
+			$typo->withAlphabetSize( $settings[ 'alphabet_size' ] );
 		}
-		if ( ! empty( $settings['index_length'] ) ) {
-			$typo->withIndexLength( $settings['index_length'] );
+		if ( ! empty( $settings[ 'index_length' ] ) ) {
+			$typo->withIndexLength( $settings[ 'index_length' ] );
 		}
 
-		$typo->withFirstCharTypoCountsDouble( ! empty( $settings['first_char_typo_double'] ) );
-		$typo->withEnabledForPrefixSearch( ! empty( $settings['typo_prefix_search'] ) );
+		$typo->withFirstCharTypoCountsDouble( ! empty( $settings[ 'first_char_typo_double' ] ) );
+		$typo->withEnabledForPrefixSearch( ! empty( $settings[ 'typo_prefix_search' ] ) );
 
-		if ( ! empty( $settings['typo_thresholds'] ) && is_array( $settings['typo_thresholds'] ) ) {
-			$typo->withTypoThresholds( $settings['typo_thresholds'] );
+		if ( ! empty( $settings[ 'typo_thresholds' ] ) && is_array( $settings[ 'typo_thresholds' ] ) ) {
+			$typo->withTypoThresholds( $settings[ 'typo_thresholds' ] );
 		}
 
 		return $typo;
@@ -408,7 +408,7 @@ class WP_Loupe_Admin_Indexer {
 		$document = [ 'id' => $post->ID ];
 
 		foreach ( $fields as $field_name => $settings ) {
-			if ( empty( $settings['searchable'] ) && empty( $settings['filterable'] ) && empty( $settings['sortable'] ) ) {
+			if ( empty( $settings[ 'searchable' ] ) && empty( $settings[ 'filterable' ] ) && empty( $settings[ 'sortable' ] ) ) {
 				continue;
 			}
 
@@ -417,7 +417,7 @@ class WP_Loupe_Admin_Indexer {
 
 			if ( null !== $value ) {
 				$document[ $field_name ] = $value;
-			} elseif ( ! empty( $settings['sortable'] ) ) {
+			} elseif ( ! empty( $settings[ 'sortable' ] ) ) {
 				$document[ $field_name ] = '';
 			}
 		}
@@ -489,9 +489,9 @@ class WP_Loupe_Admin_Indexer {
 			return '' !== $value ? $value : null;
 		}
 		if ( is_array( $value ) ) {
-			if ( isset( $value['lat'] ) && ( isset( $value['lng'] ) || isset( $value['lon'] ) ) ) {
-				$lat = $value['lat'];
-				$lng = $value['lng'] ?? $value['lon'];
+			if ( isset( $value[ 'lat' ] ) && ( isset( $value[ 'lng' ] ) || isset( $value[ 'lon' ] ) ) ) {
+				$lat = $value[ 'lat' ];
+				$lng = $value[ 'lng' ] ?? $value[ 'lon' ];
 				return is_numeric( $lat ) && is_numeric( $lng )
 					? [ 'lat' => (float) $lat, 'lng' => (float) $lng ]
 					: null;

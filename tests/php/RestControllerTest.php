@@ -39,8 +39,8 @@ final class RestControllerTest extends TestCase {
 				'/search',
 				\Mockery::on(
 					static function ( array $args ): bool {
-						return isset( $args['callback'], $args['permission_callback'], $args['args']['scope']['default'] )
-							&& 'content' === $args['args']['scope']['default'];
+						return isset( $args[ 'callback' ], $args[ 'permission_callback' ], $args[ 'args' ][ 'scope' ][ 'default' ] )
+							&& 'content' === $args[ 'args' ][ 'scope' ][ 'default' ];
 					}
 				)
 			);
@@ -109,7 +109,7 @@ final class RestControllerTest extends TestCase {
 	}
 
 	public function test_handle_search_returns_content_context_fields(): void {
-		$indexer = $this->createMock( WP_Loupe_Admin_Indexer::class );
+		$indexer = $this->createMock( WP_Loupe_Admin_Indexer::class);
 		$indexer->method( 'search' )
 			->with( 'hello' )
 			->willReturn( [
@@ -173,8 +173,8 @@ final class RestControllerTest extends TestCase {
 		$result = $controller->handle_search( $request );
 
 		self::assertInstanceOf( \WP_REST_Response::class, $result );
-		self::assertSame( 'Excerpt body for admin search results.', $result->get_data()['hits'][0]['excerpt'] );
-		self::assertSame( 'Per', $result->get_data()['hits'][0]['authorName'] );
-		self::assertSame( '2026-03-21', $result->get_data()['hits'][0]['dateLabel'] );
+		self::assertSame( 'Excerpt body for admin search results.', $result->get_data()[ 'hits' ][ 0 ][ 'excerpt' ] );
+		self::assertSame( 'Per', $result->get_data()[ 'hits' ][ 0 ][ 'authorName' ] );
+		self::assertSame( '2026-03-21', $result->get_data()[ 'hits' ][ 0 ][ 'dateLabel' ] );
 	}
 }
