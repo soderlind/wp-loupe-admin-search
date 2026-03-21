@@ -30,7 +30,7 @@ jobs:
         uses: thedoctor0/zip-release@b57d897cb5d60cb78b51a507f63fa184cfe35554 #0.7.6
         with:
           type: 'zip'
-          filename: 'wp-loupe-admin.zip'
+          filename: 'wp-loupe-admin-search.zip'
           exclusions: >-
             *.git* /*.github/* /*.vscode/* /*node_modules/* /*tests/*
             /src/js/* /scripts/*
@@ -42,12 +42,12 @@ jobs:
 
       - name: Verify Archive Contents
         run: |
-          echo "Listing wp-loupe-admin.zip entries:"
-          unzip -l wp-loupe-admin.zip || { echo "Failed to list zip contents"; exit 1; }
-          echo "Total files: $(unzip -l wp-loupe-admin.zip | awk 'END{print $2}')"
+          echo "Listing wp-loupe-admin-search.zip entries:"
+          unzip -l wp-loupe-admin-search.zip || { echo "Failed to list zip contents"; exit 1; }
+          echo "Total files: $(unzip -l wp-loupe-admin-search.zip | awk 'END{print $2}')"
 
           # Verify plugin-update-checker is included (required dependency)
-          if unzip -l wp-loupe-admin.zip | grep -q "vendor/yahnis-elsts/plugin-update-checker"; then
+          if unzip -l wp-loupe-admin-search.zip | grep -q "vendor/yahnis-elsts/plugin-update-checker"; then
             echo "✓ plugin-update-checker is included (vendor/)"
           else
             echo "✗ ERROR: plugin-update-checker is missing from the release!"
@@ -59,5 +59,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: wp-loupe-admin.zip
+          files: wp-loupe-admin-search.zip
           tag_name: ${{ github.event.release.tag_name }}
