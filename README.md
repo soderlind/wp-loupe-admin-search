@@ -46,7 +46,7 @@ Hooks, REST API reference, indexed field schemas, class reference, and local dev
 
 ## Support and Issues
 
-Report bugs or request features in [GitHub Issues](https://github.com/soderlind/wp-loupe-admin-search/issues).
+Report bugs or request features in [GitHub Issues](https://github.com/soderlind/wp-loupe-admin-search/issues/new/choose).
 
 ## License
 
