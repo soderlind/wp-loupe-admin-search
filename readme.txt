@@ -51,8 +51,7 @@ Yes — use the `wp_loupe_admin_schema` filter. See the [developer documentation
 
 = Where do I report bugs or request features? =
 
-Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issues/new/choose
-
+Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issues
 
 == Changelog ==
 
