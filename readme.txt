@@ -49,6 +49,10 @@ Indexes rebuild automatically when needed. You can also use WP-CLI: `wp loupe-ad
 
 Yes — use the `wp_loupe_admin_schema` filter. See the [developer documentation](https://github.com/soderlind/wp-loupe-admin/blob/main/docs/developer.md) for details.
 
+= Where do I report bugs or request features? =
+
+Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issues
+
 == Changelog ==
 
 = 1.1.0 =

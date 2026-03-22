@@ -10,7 +10,7 @@ A faster, smarter search experience for the WordPress admin. This add-on replace
 - **Native list table search** — the standard search boxes on Posts, Pages, custom post types, Media, Users, and Comments screens are automatically enhanced with Loupe results.
 - **Typo-tolerant & ranked** — powered by the Loupe search engine, results are fuzzy-matched and ranked by relevance.
 - **All admin post statuses** — indexes publish, draft, pending, private, and future posts (the main WP Loupe plugin only indexes published content).
-- **Separate admin indexes** — maintains its own search indexes independent of the main WP Loupe plugin, stored as lightweight SQLite databases.
+- **Separate admin indexes** — maintains its own [search indexes](https://github.com/soderlind/wp-loupe-admin-search/blob/main/docs/developer.md#indexed-fields) independent of the main WP Loupe plugin, stored as lightweight SQLite databases.
 - **Automatic index management** — indexes are built on first admin load and kept in sync incrementally when content changes.
 - **Extensible schema** — add custom meta fields to the search index via the `wp_loupe_admin_schema` filter.
 - **Auto-updates** — receives updates directly from GitHub releases.
@@ -43,6 +43,10 @@ wp loupe-admin status
 ## Developer Documentation
 
 Hooks, REST API reference, indexed field schemas, class reference, and local development setup are documented in [docs/developer.md](docs/developer.md).
+
+## Support and Issues
+
+Report bugs or request features in [GitHub Issues](https://github.com/soderlind/wp-loupe-admin-search/issues).
 
 ## License
 

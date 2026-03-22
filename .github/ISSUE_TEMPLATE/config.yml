@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/soderlind/wp-loupe-admin-search/blob/main/README.md
+    about: Review installation, requirements, and WP-CLI usage before opening an issue.
+  - name: Developer documentation
+    url: https://github.com/soderlind/wp-loupe-admin-search/blob/main/docs/developer.md
+    about: Check hooks, REST API details, indexed fields, and local development notes.

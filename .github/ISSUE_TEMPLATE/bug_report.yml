@@ -1,0 +1,94 @@
+name: Bug report
+description: Report a reproducible problem in WP Loupe - Admin Search.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        Please include enough detail to reproduce the issue. If the problem involves search results, note which admin screen or search scope you were using.
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: What happened?
+      description: Describe the bug and the visible result.
+      placeholder: The search modal opens, but results stay empty even though matching posts exist.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: List the exact steps needed to reproduce the issue.
+      placeholder: |
+        1. Activate WP Loupe and WP Loupe - Admin Search
+        2. Open the Posts screen
+        3. Search for "example"
+        4. Notice that...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: What did you expect to happen?
+      placeholder: Matching posts should appear in the search results.
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: WP Loupe - Admin Search version
+      placeholder: 1.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: wp-loupe-version
+    attributes:
+      label: WP Loupe version
+      placeholder: 1.2.3
+    validations:
+      required: true
+
+  - type: input
+    id: wordpress-version
+    attributes:
+      label: WordPress version
+      placeholder: 6.8.1
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: 8.3
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Required for UI issues such as the modal, admin bar launcher, or dashboard widget.
+      placeholder: Safari 17
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs, screenshots, or additional details
+      description: Paste stack traces, error messages, or screenshots if you have them.
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched for existing issues before creating this report.
+          required: true

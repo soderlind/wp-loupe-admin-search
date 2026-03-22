@@ -1,0 +1,49 @@
+name: Feature request
+description: Suggest an improvement for WP Loupe - Admin Search.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for feature ideas and product improvements.
+
+        Please describe the problem you are trying to solve, not only the implementation you have in mind.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this feature solve?
+      description: Describe the limitation, frustration, or missing workflow.
+      placeholder: It is hard to limit admin search to a specific custom post type when using the modal.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior you would like to see.
+      placeholder: Add a filter or UI control that limits results to selected post types.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: List workarounds or other approaches you considered.
+      placeholder: I currently use the native list table search, but it does not cover the same scopes.
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Additional context or use case
+      description: Share examples, screenshots, or workflow details that explain why this matters.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched for existing issues before creating this request.
+          required: true
