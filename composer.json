@@ -8,7 +8,7 @@
 	"require-dev": {
 		"brain/monkey": "^2.6",
 		"mockery/mockery": "^1.6",
-		"phpunit/phpunit": "^9.6 || ^10.5"
+		"phpunit/phpunit": "^12.5.22"
 	},
 	"autoload-dev": {
 		"psr-4": {
