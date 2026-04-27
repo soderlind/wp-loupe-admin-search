@@ -24,6 +24,7 @@
 			);
 			this.lastActiveElement = null;
 			this.searchState = new WeakMap();
+			this.commandPaletteIcon = null;
 		}
 
 		init() {
@@ -32,6 +33,7 @@
 			}
 
 			this.installNonceMiddleware();
+			this.registerCommandPaletteLoader();
 			this.bindOpeners();
 			this.bindModal();
 			this.bindForms();
@@ -47,6 +49,262 @@
 				wp.apiFetch.use(
 					wp.apiFetch.createNonceMiddleware( config.nonce )
 				);
+			}
+		}
+
+		registerCommandPaletteLoader() {
+			const commandPalette = config.commandPalette || {};
+			const commandStore = window.wp?.commands?.store;
+			const dispatch = window.wp?.data?.dispatch;
+			const element = window.wp?.element;
+
+			if (
+				! commandPalette.enabled ||
+				! commandStore ||
+				typeof dispatch !== 'function' ||
+				typeof element?.createElement !== 'function' ||
+				typeof element?.useState !== 'function' ||
+				typeof element?.useEffect !== 'function' ||
+				typeof window.wp?.apiFetch !== 'function'
+			) {
+				return;
+			}
+
+			this.commandPaletteIcon = this.createCommandPaletteIcon( element );
+
+			const commandsDispatch = dispatch( commandStore );
+
+			if ( typeof commandsDispatch?.registerCommandLoader !== 'function' ) {
+				return;
+			}
+
+			commandsDispatch.registerCommandLoader( {
+				name: 'wp-loupe-admin/search-results',
+				hook: this.createCommandPaletteLoader( element ),
+			} );
+		}
+
+		createCommandPaletteIcon( element ) {
+			return element.createElement(
+				'svg',
+				{
+					viewBox: '0 0 20 20',
+					width: 20,
+					height: 20,
+					xmlns: 'http://www.w3.org/2000/svg',
+					'aria-hidden': true,
+					focusable: false,
+				},
+				element.createElement( 'circle', {
+					cx: 10,
+					cy: 10,
+					r: 9,
+					fill: '#6c63ff',
+					fillOpacity: 0.12,
+					stroke: '#6c63ff',
+					strokeWidth: 1.5,
+				} ),
+				element.createElement( 'circle', {
+					cx: 10,
+					cy: 10,
+					r: 5.5,
+					fill: 'none',
+					stroke: '#6c63ff',
+					strokeWidth: 1,
+					opacity: 0.5,
+				} ),
+				element.createElement( 'path', {
+					d: 'M7,10.5 L9,12.5 L13,8',
+					fill: 'none',
+					stroke: '#6c63ff',
+					strokeWidth: 1.75,
+					strokeLinecap: 'round',
+					strokeLinejoin: 'round',
+				} )
+			);
+		}
+
+		createCommandPaletteLoader( element ) {
+			return ( loaderInput = {} ) => {
+				const commandPalette = config.commandPalette || {};
+				const availableScopes = Array.isArray( commandPalette.scopes )
+					? commandPalette.scopes
+					: [];
+				const minQueryLength = Math.max(
+					1,
+					Number( commandPalette.minQueryLength ) || 2
+				);
+				const perScopeLimit = Math.max(
+					1,
+					Number( commandPalette.perScopeLimit ) || 3
+				);
+				const searchTerm = this.getCommandPaletteSearchTerm( loaderInput );
+				const [ commands, setCommands ] = element.useState( [] );
+				const [ isLoading, setIsLoading ] = element.useState( false );
+
+				element.useEffect( () => {
+					let isStale = false;
+
+					if (
+						searchTerm.length < minQueryLength ||
+						availableScopes.length === 0
+					) {
+						setCommands( [] );
+						setIsLoading( false );
+						return () => {
+							isStale = true;
+						};
+					}
+
+					setIsLoading( true );
+
+					Promise.all(
+						availableScopes.map( ( scope ) => {
+							return this.fetchCommandPaletteScope(
+								scope,
+								searchTerm,
+								perScopeLimit
+							).catch( () => [] );
+						} )
+					)
+						.then( ( scopedCommands ) => {
+							if ( isStale ) {
+								return;
+							}
+
+							setCommands( scopedCommands.flat() );
+						} )
+						.finally( () => {
+							if ( ! isStale ) {
+								setIsLoading( false );
+							}
+						} );
+
+					return () => {
+						isStale = true;
+					};
+				}, [ searchTerm ] );
+
+				return { commands, isLoading };
+			};
+		}
+
+		getCommandPaletteSearchTerm( loaderInput ) {
+			const search =
+				typeof loaderInput === 'string'
+					? loaderInput
+					: loaderInput?.search || loaderInput?.searchTerm || '';
+
+			return String( search ).trim();
+		}
+
+		async fetchCommandPaletteScope( scope, searchTerm, perScopeLimit ) {
+			const scopeName = scope?.name;
+
+			if ( ! scopeName ) {
+				return [];
+			}
+
+			const response = await wp.apiFetch( {
+				path: `${ apiPath }?q=${ encodeURIComponent(
+					searchTerm
+				) }&per_page=${ perScopeLimit }&page=1&scope=${ encodeURIComponent(
+					scopeName
+				) }`,
+				method: 'GET',
+			} );
+
+			const hits = Array.isArray( response?.hits ) ? response.hits : [];
+
+			return hits
+				.map( ( hit, index ) => {
+					return this.createCommandFromHit( hit, scope, index, searchTerm );
+				} )
+				.filter( Boolean );
+		}
+
+		createCommandFromHit( hit, scope, index, searchTerm = '' ) {
+			const targetUrl = hit?.editUrl || hit?.viewUrl || '';
+
+			if ( ! targetUrl ) {
+				return null;
+			}
+
+			const title = String( hit.title || __( '(no title)', 'wp-loupe-admin' ) );
+			const scopeLabel = String( scope?.label || scope?.name || '' );
+			const keywords = [
+				title,
+				searchTerm,
+				hit.postTypeLabel,
+				hit.statusLabel,
+				hit.authorName,
+				hit.dateLabel,
+				hit.excerpt,
+				scopeLabel,
+			]
+				.filter( Boolean )
+				.map( ( keyword ) => String( keyword ) );
+
+			return {
+				name: `wp-loupe-admin/${ scope?.name || 'result' }/${ this.getStableCommandId(
+					hit.id,
+					index
+				) }`,
+				label: title,
+				icon: this.commandPaletteIcon,
+				searchLabel: keywords.join( ' ' ),
+				keywords,
+				category: hit.editUrl ? 'edit' : 'view',
+				callback: () => {
+					this.closeCommandPalette();
+					this.navigateToUrl( targetUrl );
+				},
+			};
+		}
+
+		navigateToUrl( targetUrl ) {
+			const navigationEvent = new CustomEvent(
+				'wp-loupe-admin-search:navigate',
+				{
+					cancelable: true,
+					detail: {
+						url: targetUrl,
+					},
+				}
+			);
+
+			if ( ! document.dispatchEvent( navigationEvent ) ) {
+				return;
+			}
+
+			window.location.assign( targetUrl );
+		}
+
+		getStableCommandId( id, fallback ) {
+			const stableId = String( id || fallback )
+				.replace( /[^a-z0-9_-]+/gi, '-' )
+				.replace( /^-+|-+$/g, '' );
+
+			return stableId || String( fallback );
+		}
+
+		closeCommandPalette() {
+			const commandStore = window.wp?.commands?.store;
+			const dispatch = window.wp?.data?.dispatch;
+
+			if ( ! commandStore || typeof dispatch !== 'function' ) {
+				return;
+			}
+
+			const commandsDispatch = dispatch( commandStore );
+
+			if ( typeof commandsDispatch?.close === 'function' ) {
+				commandsDispatch.close();
+				return;
+			}
+
+			if ( typeof commandsDispatch?.closeCommandPalette === 'function' ) {
+				commandsDispatch.closeCommandPalette();
 			}
 		}
 

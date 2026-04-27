@@ -41,7 +41,7 @@ class WP_Loupe_Admin_Search {
 			return false;
 		}
 
-		if ( current_user_can( 'manage_options' ) || current_user_can( 'activate_plugins' ) || current_user_can( 'list_users' ) || current_user_can( 'edit_users' ) ) {
+		if ( current_user_can( 'manage_options' ) || current_user_can( 'activate_plugins' ) || current_user_can( 'list_users' ) || current_user_can( 'edit_users' ) || current_user_can( 'moderate_comments' ) ) {
 			return true;
 		}
 
@@ -123,8 +123,20 @@ class WP_Loupe_Admin_Search {
 			return;
 		}
 
-		if ( ! is_admin() && ! is_admin_bar_showing() ) {
+		$is_admin = is_admin();
+
+		if ( ! $is_admin && ! is_admin_bar_showing() ) {
 			return;
+		}
+
+		$script_dependencies    = [ 'wp-api-fetch', 'wp-i18n' ];
+		$command_palette_enabled = false;
+
+		if ( $is_admin && wp_script_is( 'wp-commands', 'registered' ) ) {
+			$script_dependencies[]     = 'wp-commands';
+			$script_dependencies[]     = 'wp-data';
+			$script_dependencies[]     = 'wp-element';
+			$command_palette_enabled = true;
 		}
 
 		wp_enqueue_style(
@@ -137,7 +149,7 @@ class WP_Loupe_Admin_Search {
 		wp_enqueue_script(
 			'wp-loupe-admin-addon',
 			WP_LOUPE_ADMIN_URL . 'lib/js/admin-search.js',
-			[ 'wp-api-fetch', 'wp-i18n' ],
+			$script_dependencies,
 			WP_LOUPE_ADMIN_VERSION,
 			true
 		);
@@ -160,10 +172,83 @@ class WP_Loupe_Admin_Search {
 					'content'    => __( 'Content', 'wp-loupe-admin' ),
 					'users'      => __( 'Users', 'wp-loupe-admin' ),
 					'plugins'    => __( 'Plugins', 'wp-loupe-admin' ),
+					'comments'   => __( 'Comments', 'wp-loupe-admin' ),
 				],
-				'perPage' => is_admin() && 'index.php' === $hook ? 8 : 10,
+				'perPage'        => $is_admin && 'index.php' === $hook ? 8 : 10,
+				'commandPalette' => [
+					'enabled'        => $command_palette_enabled,
+					'minQueryLength' => 2,
+					'perScopeLimit'  => 3,
+					'scopes'         => $this->get_available_command_palette_scopes(),
+					'labels'         => [
+						'category' => __( 'WP Loupe', 'wp-loupe-admin' ),
+					],
+				],
 			]
 		);
+	}
+
+	/**
+	 * Build Command Palette scopes available to the current user.
+	 *
+	 * @return array<int,array{name:string,label:string}>
+	 */
+	private function get_available_command_palette_scopes(): array {
+		$scopes = [];
+
+		if ( $this->current_user_can_search_content() ) {
+			$scopes[] = [
+				'name'  => 'content',
+				'label' => __( 'Content', 'wp-loupe-admin' ),
+			];
+		}
+
+		if ( current_user_can( 'list_users' ) || current_user_can( 'edit_users' ) || current_user_can( 'manage_options' ) ) {
+			$scopes[] = [
+				'name'  => 'users',
+				'label' => __( 'Users', 'wp-loupe-admin' ),
+			];
+		}
+
+		if ( current_user_can( 'activate_plugins' ) ) {
+			$scopes[] = [
+				'name'  => 'plugins',
+				'label' => __( 'Plugins', 'wp-loupe-admin' ),
+			];
+		}
+
+		if ( current_user_can( 'moderate_comments' ) || current_user_can( 'edit_posts' ) || current_user_can( 'manage_options' ) ) {
+			$scopes[] = [
+				'name'  => 'comments',
+				'label' => __( 'Comments', 'wp-loupe-admin' ),
+			];
+		}
+
+		return $scopes;
+	}
+
+	/**
+	 * Check content search access against indexed post types.
+	 *
+	 * @return bool
+	 */
+	private function current_user_can_search_content(): bool {
+		if ( current_user_can( 'manage_options' ) ) {
+			return true;
+		}
+
+		foreach ( $this->post_types as $post_type ) {
+			$post_type_object = get_post_type_object( $post_type );
+			if ( ! $post_type_object || empty( $post_type_object->cap->edit_posts ) ) {
+				continue;
+			}
+
+			if ( current_user_can( $post_type_object->cap->edit_posts ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

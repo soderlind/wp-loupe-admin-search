@@ -118,6 +118,14 @@ The plugin intercepts native WordPress admin search in three places:
 
 Each integration includes a re-entrancy guard to prevent infinite loops.
 
+## Command Palette
+
+When the WordPress Command Palette package is registered in admin, the `wp-loupe-admin-addon` script also depends on `wp-commands`, `wp-data`, and `wp-element`. The same script registers a dynamic command loader named `wp-loupe-admin/search-results`.
+
+The loader reuses `wp-loupe-admin/v1/search` instead of adding a separate endpoint. Available scopes are localized from the current user's capabilities, and each scope is queried independently with a small per-scope limit. Permission failures, missing indexes, or other per-scope errors are ignored so one unavailable scope does not break the whole palette.
+
+Returned hits are mapped to Command Palette commands with stable `wp-loupe-admin/{scope}/{id}` names. Selecting a result closes the palette and navigates to the result's `editUrl`, falling back to `viewUrl` when no edit URL is available.
+
 ## WP-CLI Commands
 
 ```sh

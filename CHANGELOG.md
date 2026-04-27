@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0 - 2026-04-27
+
+### Added
+- WP Loupe Admin Search in the Command Palette.
+
 ## 1.1.0
 
 ### Added
