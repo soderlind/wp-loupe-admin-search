@@ -4,7 +4,7 @@ Tags: admin search, search, wp loupe, dashboard search, typo-tolerant
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -54,6 +54,9 @@ Yes — use the `wp_loupe_admin_schema` filter. See the [developer documentation
 Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issues
 
 == Changelog ==
+
+= 1.2.0 =
+* Add WP Loupe Admin Search to the Command Palette.
 
 = 1.1.0 =
 * Admin bar search modal now available on the frontend when the admin bar is visible.

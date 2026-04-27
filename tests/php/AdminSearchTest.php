@@ -40,23 +40,38 @@ final class AdminSearchTest extends TestCase {
 		self::addToAssertionCount( 1 );
 	}
 
-	public function test_enqueue_assets_localizes_scope_labels(): void {
+	public function test_enqueue_assets_localizes_command_palette_config_when_commands_are_registered(): void {
 		$search = new WP_Loupe_Admin_Search( [ 'post' ] );
 
 		Functions\expect( 'is_user_logged_in' )->once()->andReturn( true );
-		Functions\expect( 'current_user_can' )
-			->times( 1 )
-			->with( 'manage_options' )
+		Functions\when( 'current_user_can' )->alias(
+			static function ( string $capability ): bool {
+				return in_array( $capability, [ 'manage_options', 'activate_plugins', 'list_users', 'moderate_comments' ], true );
+			}
+		);
+		Functions\expect( 'is_admin' )->once()->andReturn( true );
+		Functions\expect( 'wp_script_is' )
+			->once()
+			->with( 'wp-commands', 'registered' )
 			->andReturn( true );
-		Functions\expect( 'is_admin' )->times( 2 )->andReturn( true );
 
 		Functions\expect( 'wp_enqueue_style' )->once();
-		Functions\expect( 'wp_enqueue_script' )->once();
+		Functions\expect( 'wp_enqueue_script' )
+			->once()
+			->with(
+				'wp-loupe-admin-addon',
+				\Mockery::type( 'string' ),
+				\Mockery::on(
+					static function ( array $dependencies ): bool {
+						return [ 'wp-api-fetch', 'wp-i18n', 'wp-commands', 'wp-data', 'wp-element' ] === $dependencies;
+					}
+				),
+				\Mockery::type( 'string' ),
+				true
+			);
 		Functions\expect( 'wp_create_nonce' )->once()->with( 'wp_rest' )->andReturn( 'test-nonce' );
 
-		Functions\expect( '__' )
-			->times( 11 )
-			->andReturnUsing( static fn( string $text ): string => $text );
+		Functions\when( '__' )->alias( static fn( string $text ): string => $text );
 
 		Functions\expect( 'wp_localize_script' )
 			->once()
@@ -65,10 +80,17 @@ final class AdminSearchTest extends TestCase {
 				'wpLoupeAdminSearch',
 				\Mockery::on(
 					static function ( array $payload ): bool {
+						$scope_names = array_column( $payload[ 'commandPalette' ][ 'scopes' ] ?? [], 'name' );
+
 						return '/wp-loupe-admin/v1/search' === $payload[ 'path' ]
 							&& 'test-nonce' === $payload[ 'nonce' ]
-							&& isset( $payload[ 'labels' ][ 'content' ], $payload[ 'labels' ][ 'users' ], $payload[ 'labels' ][ 'plugins' ] )
-							&& 8 === $payload[ 'perPage' ];
+							&& isset( $payload[ 'labels' ][ 'content' ], $payload[ 'labels' ][ 'users' ], $payload[ 'labels' ][ 'plugins' ], $payload[ 'labels' ][ 'comments' ] )
+							&& 8 === $payload[ 'perPage' ]
+							&& true === $payload[ 'commandPalette' ][ 'enabled' ]
+							&& 2 === $payload[ 'commandPalette' ][ 'minQueryLength' ]
+							&& 3 === $payload[ 'commandPalette' ][ 'perScopeLimit' ]
+							&& [ 'content', 'users', 'plugins', 'comments' ] === $scope_names
+							&& 'WP Loupe' === $payload[ 'commandPalette' ][ 'labels' ][ 'category' ];
 					}
 				)
 			);

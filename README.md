@@ -7,6 +7,7 @@ A faster, smarter search experience for the WordPress admin. This add-on replace
 - **Dashboard search widget** — search your site content right from the dashboard.
 - **Admin bar launcher** — click "Loupe Search" in the admin bar to open a modal search overlay.
 - **Modal search with scope switcher** — search across content, users, plugins, and comments from a single modal.
+- **Command Palette results** — when the WordPress Command Palette is available, Loupe results appear dynamically as you type.
 - **Native list table search** — the standard search boxes on Posts, Pages, custom post types, Media, Users, and Comments screens are automatically enhanced with Loupe results.
 - **Typo-tolerant & ranked** — powered by the Loupe search engine, results are fuzzy-matched and ranked by relevance.
 - **All admin post statuses** — indexes publish, draft, pending, private, and future posts (the main WP Loupe plugin only indexes published content).
@@ -51,3 +52,7 @@ Report bugs or request features in [GitHub Issues](https://github.com/soderlind/
 ## License
 
 GPL-2.0+
+
+## AI Contribution Attribution
+
+`Assisted-by: GitHub Copilot:unspecified [VS Code]`
