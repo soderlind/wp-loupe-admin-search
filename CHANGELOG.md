@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Admin search modal no longer emits a duplicate DOM `id`: the search input/label now use a distinct `-field` id instead of colliding with the modal container's `id`, restoring the label-to-input association for assistive technologies.
+
 ## 1.2.0 - 2026-04-27
 
 ### Added

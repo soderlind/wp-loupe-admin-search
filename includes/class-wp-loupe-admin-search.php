@@ -296,7 +296,7 @@ class WP_Loupe_Admin_Search {
 	 * @return void
 	 */
 	private function render_search_shell( string $context, string $label, string $help ): void {
-		$form_id = sprintf( 'wp-loupe-admin-search-%s', $context );
+		$form_id = sprintf( 'wp-loupe-admin-search-%s-field', $context );
 		?>
 		<div class="wp-loupe-admin-search-shell" data-wp-loupe-search-shell="<?php echo esc_attr( $context ); ?>">
 			<form class="wp-loupe-admin-search-form" data-wp-loupe-search-form="<?php echo esc_attr( $context ); ?>">
