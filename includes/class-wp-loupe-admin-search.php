@@ -2,7 +2,7 @@
 namespace Soderlind\Plugin\WPLoupeAdmin;
 
 /**
- * Admin UI for WP Loupe Admin.
+ * Admin UI for Loupe - Admin Search.
  */
 class WP_Loupe_Admin_Search {
 	/** @var array<int,string> */
@@ -71,7 +71,7 @@ class WP_Loupe_Admin_Search {
 
 		wp_add_dashboard_widget(
 			'wp_loupe_admin_search',
-			__( 'WP Loupe Search', 'wp-loupe-admin' ),
+			__( 'Loupe Search', 'wp-loupe-admin-search' ),
 			[ $this, 'render_dashboard_widget' ]
 		);
 	}
@@ -84,8 +84,8 @@ class WP_Loupe_Admin_Search {
 	public function render_dashboard_widget(): void {
 		$this->render_search_shell(
 			'widget',
-			__( 'Search admin content', 'wp-loupe-admin' ),
-			__( 'Search indexed content, users, and installed plugins from the admin.', 'wp-loupe-admin' )
+			__( 'Search admin content', 'wp-loupe-admin-search' ),
+			__( 'Search indexed content, users, and installed plugins from the admin.', 'wp-loupe-admin-search' )
 		);
 	}
 
@@ -103,11 +103,11 @@ class WP_Loupe_Admin_Search {
 		$admin_bar->add_node( [
 			'id'     => 'wp-loupe-admin-search',
 			'parent' => 'top-secondary',
-			'title'  => __( 'Loupe Search', 'wp-loupe-admin' ),
+			'title'  => __( 'Loupe Search', 'wp-loupe-admin-search' ),
 			'href'   => '#wp-loupe-admin-search',
 			'meta'   => [
 				'class' => 'wp-loupe-admin-search-trigger',
-				'title' => __( 'Open WP Loupe admin search', 'wp-loupe-admin' ),
+				'title'  => __( 'Open Loupe admin search', 'wp-loupe-admin-search' ),
 			],
 		] );
 	}
@@ -158,21 +158,21 @@ class WP_Loupe_Admin_Search {
 			'wp-loupe-admin-addon',
 			'wpLoupeAdminSearch',
 			[
-				'path'    => '/wp-loupe-admin/v1/search',
+				'path'   => '/loupe-admin-search/v1/search',
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 				'labels'  => [
-					'emptyQuery' => __( 'Enter a search term.', 'wp-loupe-admin' ),
-					'loading'    => __( 'Searching...', 'wp-loupe-admin' ),
-					'noResults'  => __( 'No matching results found.', 'wp-loupe-admin' ),
-					'error'      => __( 'Search failed. Please try again.', 'wp-loupe-admin' ),
-					'previous'   => __( 'Previous', 'wp-loupe-admin' ),
-					'next'       => __( 'Next', 'wp-loupe-admin' ),
-					'page'       => __( 'Page', 'wp-loupe-admin' ),
-					'of'         => __( 'of', 'wp-loupe-admin' ),
-					'content'    => __( 'Content', 'wp-loupe-admin' ),
-					'users'      => __( 'Users', 'wp-loupe-admin' ),
-					'plugins'    => __( 'Plugins', 'wp-loupe-admin' ),
-					'comments'   => __( 'Comments', 'wp-loupe-admin' ),
+					'emptyQuery' => __( 'Enter a search term.', 'wp-loupe-admin-search' ),
+					'loading'    => __( 'Searching...', 'wp-loupe-admin-search' ),
+					'noResults'  => __( 'No matching results found.', 'wp-loupe-admin-search' ),
+					'error'      => __( 'Search failed. Please try again.', 'wp-loupe-admin-search' ),
+					'previous'   => __( 'Previous', 'wp-loupe-admin-search' ),
+					'next'       => __( 'Next', 'wp-loupe-admin-search' ),
+					'page'       => __( 'Page', 'wp-loupe-admin-search' ),
+					'of'         => __( 'of', 'wp-loupe-admin-search' ),
+					'content'    => __( 'Content', 'wp-loupe-admin-search' ),
+					'users'      => __( 'Users', 'wp-loupe-admin-search' ),
+					'plugins'    => __( 'Plugins', 'wp-loupe-admin-search' ),
+					'comments'   => __( 'Comments', 'wp-loupe-admin-search' ),
 				],
 				'perPage'        => $is_admin && 'index.php' === $hook ? 8 : 10,
 				'commandPalette' => [
@@ -181,7 +181,7 @@ class WP_Loupe_Admin_Search {
 					'perScopeLimit'  => 3,
 					'scopes'         => $this->get_available_command_palette_scopes(),
 					'labels'         => [
-						'category' => __( 'WP Loupe', 'wp-loupe-admin' ),
+						'category' => __( 'Loupe', 'wp-loupe-admin-search' ),
 					],
 				],
 			]
@@ -199,28 +199,28 @@ class WP_Loupe_Admin_Search {
 		if ( $this->current_user_can_search_content() ) {
 			$scopes[] = [
 				'name'  => 'content',
-				'label' => __( 'Content', 'wp-loupe-admin' ),
+				'label' => __( 'Content', 'wp-loupe-admin-search' ),
 			];
 		}
 
 		if ( current_user_can( 'list_users' ) || current_user_can( 'edit_users' ) || current_user_can( 'manage_options' ) ) {
 			$scopes[] = [
 				'name'  => 'users',
-				'label' => __( 'Users', 'wp-loupe-admin' ),
+				'label' => __( 'Users', 'wp-loupe-admin-search' ),
 			];
 		}
 
 		if ( current_user_can( 'activate_plugins' ) ) {
 			$scopes[] = [
 				'name'  => 'plugins',
-				'label' => __( 'Plugins', 'wp-loupe-admin' ),
+				'label' => __( 'Plugins', 'wp-loupe-admin-search' ),
 			];
 		}
 
 		if ( current_user_can( 'moderate_comments' ) || current_user_can( 'edit_posts' ) || current_user_can( 'manage_options' ) ) {
 			$scopes[] = [
 				'name'  => 'comments',
-				'label' => __( 'Comments', 'wp-loupe-admin' ),
+				'label' => __( 'Comments', 'wp-loupe-admin-search' ),
 			];
 		}
 
@@ -271,15 +271,15 @@ class WP_Loupe_Admin_Search {
 			<div class="wp-loupe-admin-search-panel" role="dialog" aria-modal="true"
 				aria-labelledby="wp-loupe-admin-search-title" tabindex="-1">
 				<div class="wp-loupe-admin-search-header">
-					<h2 id="wp-loupe-admin-search-title"><?php esc_html_e( 'WP Loupe Search', 'wp-loupe-admin' ); ?></h2>
+					<h2 id="wp-loupe-admin-search-title"><?php esc_html_e( 'Loupe Search', 'wp-loupe-admin-search' ); ?></h2>
 					<button type="button" class="button-link" data-wp-loupe-close="1"
-						aria-label="<?php esc_attr_e( 'Close search', 'wp-loupe-admin' ); ?>">&times;</button>
+						aria-label="<?php esc_attr_e( 'Close search', 'wp-loupe-admin-search' ); ?>">&times;</button>
 				</div>
 				<?php
 				$this->render_search_shell(
 					'modal',
-					__( 'Search admin content', 'wp-loupe-admin' ),
-					__( 'Search indexed content, users, and installed plugins without leaving the current admin screen.', 'wp-loupe-admin' )
+					__( 'Search admin content', 'wp-loupe-admin-search' ),
+					__( 'Search indexed content, users, and installed plugins without leaving the current admin screen.', 'wp-loupe-admin-search' )
 				);
 				?>
 			</div>
@@ -303,20 +303,20 @@ class WP_Loupe_Admin_Search {
 				<label class="screen-reader-text"
 					for="<?php echo esc_attr( $form_id ); ?>"><?php echo esc_html( $label ); ?></label>
 				<div class="wp-loupe-admin-search-row">
-					<select name="scope" aria-label="<?php esc_attr_e( 'Search scope', 'wp-loupe-admin' ); ?>">
-						<option value="content"><?php esc_html_e( 'Content', 'wp-loupe-admin' ); ?></option>
+					<select name="scope" aria-label="<?php esc_attr_e( 'Search scope', 'wp-loupe-admin-search' ); ?>">
+						<option value="content"><?php esc_html_e( 'Content', 'wp-loupe-admin-search' ); ?></option>
 						<?php if ( current_user_can( 'list_users' ) || current_user_can( 'edit_users' ) || current_user_can( 'manage_options' ) ) : ?>
-							<option value="users"><?php esc_html_e( 'Users', 'wp-loupe-admin' ); ?></option>
+							<option value="users"><?php esc_html_e( 'Users', 'wp-loupe-admin-search' ); ?></option>
 						<?php endif; ?>
 						<?php if ( current_user_can( 'activate_plugins' ) || current_user_can( 'manage_options' ) ) : ?>
-							<option value="plugins"><?php esc_html_e( 'Plugins', 'wp-loupe-admin' ); ?></option>
+							<option value="plugins"><?php esc_html_e( 'Plugins', 'wp-loupe-admin-search' ); ?></option>
 						<?php endif; ?>
 					</select>
 					<input type="search" id="<?php echo esc_attr( $form_id ); ?>" class="regular-text" name="q"
-						placeholder="<?php esc_attr_e( 'Search content, users, plugins...', 'wp-loupe-admin' ); ?>"
+						placeholder="<?php esc_attr_e( 'Search content, users, plugins...', 'wp-loupe-admin-search' ); ?>"
 						autocomplete="off" />
 					<button type="submit"
-						class="button button-primary"><?php esc_html_e( 'Search', 'wp-loupe-admin' ); ?></button>
+						class="button button-primary"><?php esc_html_e( 'Search', 'wp-loupe-admin-search' ); ?></button>
 				</div>
 			</form>
 			<p class="description"><?php echo esc_html( $help ); ?></p>

@@ -1,8 +1,8 @@
 <?php
 /**
- * Uninstall handler for WP Loupe Admin.
+ * Uninstall handler for Loupe - Admin Search.
  *
- * Removes admin search indexes stored under {wp_loupe_db_path}/admin/.
+ * Removes admin search indexes stored under {loupe_search_db_path}/admin/.
  *
  * @package Soderlind\Plugin\WPLoupeAdmin
  */
@@ -11,15 +11,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	die;
 }
 
-$default = defined( 'WP_CONTENT_DIR' ) ? ( WP_CONTENT_DIR . '/wp-loupe-db' ) : '';
-$base    = apply_filters( 'wp_loupe_db_path', $default );
-$base    = is_string( $base ) ? trim( $base ) : '';
+require_once __DIR__ . '/includes/class-wp-loupe-admin-paths.php';
 
-if ( '' === $base ) {
-	$base = $default;
-}
-
-$admin_path = rtrim( $base, '/' ) . '/admin';
+$admin_path = \Soderlind\Plugin\WPLoupeAdmin\WP_Loupe_Admin_Paths::admin_db_base();
 
 if ( '' !== $admin_path && is_dir( $admin_path ) ) {
 	if ( ! class_exists( 'WP_Filesystem_Direct' ) ) {

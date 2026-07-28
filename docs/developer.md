@@ -1,12 +1,12 @@
 # Developer Documentation
 
-Technical reference for developers extending or contributing to WP Loupe – Admin Search.
+Technical reference for developers extending or contributing to Loupe - Admin Search.
 
 ## Admin Index Architecture
 
-WP Loupe Admin maintains its own search indexes, separate from the main WP Loupe plugin. This allows the admin to index all post statuses relevant to editorial workflows (publish, draft, pending, private, future), whereas the main plugin only indexes published content.
+Loupe - Admin Search maintains its own search indexes, separate from the main Loupe Search plugin. This allows the admin to index all post statuses relevant to editorial workflows (publish, draft, pending, private, future), whereas the main plugin only indexes published content.
 
-Indexes are stored at `{wp_loupe_db_path}/admin/{entity_type}/` as SQLite databases. They are created automatically on the first admin page load and kept in sync incrementally.
+Indexes are stored at `{loupe_search_db_path}/admin/{entity_type}/` as SQLite databases, i.e. `wp-content/loupe-search-db/admin/` by default. On sites carried over from WP Loupe, where `wp-content/wp-loupe-db/` already exists and `wp-content/loupe-search-db/` does not, the legacy directory is used instead — matching Loupe Search's own fallback. They are created automatically on the first admin page load and kept in sync incrementally.
 
 ## Indexed Fields
 
@@ -63,12 +63,14 @@ Any field not matched to a `WP_Post` property, virtual field, or taxonomy falls 
 
 ## Hooks
 
-### `wp_loupe_admin_schema`
+### `loupe_admin_search_schema`
 
 Filter the indexed fields for any entity type. Use this to add custom meta fields to the search index.
 
+Renamed from `wp_loupe_admin_schema` in 1.3.0. The old name still fires via `apply_filters_deprecated()` and will be removed in a future major release.
+
 ```php
-add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_type ): array {
+add_filter( 'loupe_admin_search_schema', function ( array $fields, string $entity_type ): array {
     if ( 'post' === $entity_type ) {
         $fields['my_custom_meta'] = [
             'searchable' => true,
@@ -81,13 +83,13 @@ add_filter( 'wp_loupe_admin_schema', function ( array $fields, string $entity_ty
 }, 10, 2 );
 ```
 
-After changing the schema, delete the admin index folder (`wp-loupe-db/admin/`) to trigger a full rebuild on the next admin page load.
+After changing the schema, delete the admin index folder (`loupe-search-db/admin/`) to trigger a full rebuild on the next admin page load.
 
 ## REST API
 
-### `wp-loupe-admin/v1/search`
+### `loupe-admin-search/v1/search`
 
-Search endpoint with scope parameter.
+Search endpoint with scope parameter. Also available at the deprecated `wp-loupe-admin/v1/search` alias, which will be removed in a future major release.
 
 **Method:** `GET`
 
@@ -122,7 +124,7 @@ Each integration includes a re-entrancy guard to prevent infinite loops.
 
 When the WordPress Command Palette package is registered in admin, the `wp-loupe-admin-addon` script also depends on `wp-commands`, `wp-data`, and `wp-element`. The same script registers a dynamic command loader named `wp-loupe-admin/search-results`.
 
-The loader reuses `wp-loupe-admin/v1/search` instead of adding a separate endpoint. Available scopes are localized from the current user's capabilities, and each scope is queried independently with a small per-scope limit. Permission failures, missing indexes, or other per-scope errors are ignored so one unavailable scope does not break the whole palette.
+The loader reuses `loupe-admin-search/v1/search` instead of adding a separate endpoint. Available scopes are localized from the current user's capabilities, and each scope is queried independently with a small per-scope limit. Permission failures, missing indexes, or other per-scope errors are ignored so one unavailable scope does not break the whole palette.
 
 Returned hits are mapped to Command Palette commands with stable `wp-loupe-admin/{scope}/{id}` names. Selecting a result closes the palette and navigates to the result's `editUrl`, falling back to `viewUrl` when no edit URL is available.
 

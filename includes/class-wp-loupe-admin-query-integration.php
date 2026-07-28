@@ -33,7 +33,7 @@ class WP_Loupe_Admin_Query_Integration {
 	}
 
 	/**
-	 * Short-circuit supported admin post search queries with WP Loupe results.
+	 * Short-circuit supported admin post search queries with Loupe Search results.
 	 *
 	 * @param mixed     $posts Existing short-circuit value.
 	 * @param \WP_Query $query Query instance.

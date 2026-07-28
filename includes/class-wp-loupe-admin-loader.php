@@ -2,7 +2,7 @@
 namespace Soderlind\Plugin\WPLoupeAdmin;
 
 /**
- * Main add-on loader for WP Loupe Admin.
+ * Main add-on loader for Loupe - Admin Search.
  */
 class WP_Loupe_Admin_Loader {
 	/** @var self|null */
@@ -28,6 +28,8 @@ class WP_Loupe_Admin_Loader {
 	 * Constructor.
 	 */
 	private function __construct() {
+		require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-paths.php';
+
 		$this->setup_post_types();
 
 		// Core classes.
@@ -129,7 +131,7 @@ class WP_Loupe_Admin_Loader {
 	}
 
 	/**
-	 * Resolve post types from WP Loupe settings.
+	 * Resolve post types from Loupe Search settings.
 	 *
 	 * @return void
 	 */
@@ -142,7 +144,8 @@ class WP_Loupe_Admin_Loader {
 			$this->post_types = [ 'post', 'page' ];
 		}
 
-		$this->post_types = apply_filters( 'wp_loupe_post_types', $this->post_types );
+		/** This filter is documented in Loupe Search's class-wp-loupe-loader.php */
+		$this->post_types = apply_filters( 'loupe_search_post_types', $this->post_types );
 	}
 
 }

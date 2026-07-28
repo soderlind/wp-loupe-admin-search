@@ -60,16 +60,16 @@ class WP_Loupe_Admin_Notice {
 		$stale = [];
 
 		if ( $this->post_indexer->needs_initial_index() ) {
-			$stale[] = __( 'content (post types)', 'wp-loupe-admin' );
+			$stale[] = __( 'content (post types)', 'wp-loupe-admin-search' );
 		}
 		if ( $this->user_indexer->needs_initial_index() ) {
-			$stale[] = __( 'users', 'wp-loupe-admin' );
+			$stale[] = __( 'users', 'wp-loupe-admin-search' );
 		}
 		if ( $this->comment_indexer->needs_initial_index() ) {
-			$stale[] = __( 'comments', 'wp-loupe-admin' );
+			$stale[] = __( 'comments', 'wp-loupe-admin-search' );
 		}
 		if ( $this->plugin_indexer->needs_initial_index() ) {
-			$stale[] = __( 'plugins', 'wp-loupe-admin' );
+			$stale[] = __( 'plugins', 'wp-loupe-admin-search' );
 		}
 
 		if ( empty( $stale ) ) {
@@ -78,7 +78,7 @@ class WP_Loupe_Admin_Notice {
 
 		$message = sprintf(
 			/* translators: %s: comma-separated list of index types that need rebuilding */
-			__( 'WP Loupe Admin: The following search indexes need rebuilding: %s. Run <code>wp loupe-admin reindex</code> or visit any admin page to trigger auto-rebuild.', 'wp-loupe-admin' ),
+			__( 'Loupe - Admin Search: The following search indexes need rebuilding: %s. Run <code>wp loupe-admin reindex</code> or visit any admin page to trigger auto-rebuild.', 'wp-loupe-admin-search' ),
 			implode( ', ', $stale )
 		);
 

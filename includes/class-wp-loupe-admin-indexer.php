@@ -9,11 +9,11 @@ use Loupe\Loupe\SearchParameters;
 /**
  * Admin-specific Loupe indexer and search engine.
  *
- * Maintains separate indexes stored under {wp_loupe_db_path}/admin/{entity_type}/
+ * Maintains separate indexes stored under {loupe_search_db_path}/admin/{entity_type}/
  * that include all admin-relevant post statuses (not just publish).
  *
  * Uses its own schema defined by WP_Loupe_Admin_Schema, independent from the
- * main WP Loupe plugin's wp_loupe_fields option.
+ * main Loupe Search plugin's wp_loupe_fields option.
  */
 class WP_Loupe_Admin_Indexer {
 	/** Post statuses to include in admin indexes. */
@@ -248,15 +248,7 @@ class WP_Loupe_Admin_Indexer {
 	 * @return string
 	 */
 	private function resolve_admin_db_base(): string {
-		$default = defined( 'WP_CONTENT_DIR' ) ? ( WP_CONTENT_DIR . '/wp-loupe-db' ) : '';
-		$base    = apply_filters( 'wp_loupe_db_path', $default );
-		$base    = is_string( $base ) ? trim( $base ) : '';
-
-		if ( '' === $base ) {
-			$base = $default;
-		}
-
-		return rtrim( $base, '/' ) . '/admin';
+		return WP_Loupe_Admin_Paths::admin_db_base();
 	}
 
 	/**

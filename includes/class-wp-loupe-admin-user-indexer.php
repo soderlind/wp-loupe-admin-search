@@ -9,7 +9,7 @@ use Loupe\Loupe\SearchParameters;
 /**
  * Admin-specific Loupe indexer for WordPress users.
  *
- * Maintains a separate index at {wp_loupe_db_path}/admin/user/
+ * Maintains a separate index at {loupe_search_db_path}/admin/user/
  * using the admin schema's user entity definition.
  */
 class WP_Loupe_Admin_User_Indexer {
@@ -288,15 +288,7 @@ class WP_Loupe_Admin_User_Indexer {
 	 * @return string
 	 */
 	private function resolve_admin_db_base(): string {
-		$default = defined( 'WP_CONTENT_DIR' ) ? ( WP_CONTENT_DIR . '/wp-loupe-db' ) : '';
-		$base    = apply_filters( 'wp_loupe_db_path', $default );
-		$base    = is_string( $base ) ? trim( $base ) : '';
-
-		if ( '' === $base ) {
-			$base = $default;
-		}
-
-		return rtrim( $base, '/' ) . '/admin';
+		return WP_Loupe_Admin_Paths::admin_db_base();
 	}
 
 	/**

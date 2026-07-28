@@ -8,6 +8,7 @@ if ( ! class_exists( 'Loupe\\Loupe\\Configuration' ) ) {
 	require_once __DIR__ . '/stubs/loupe-stubs.php';
 }
 
+require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-paths.php';
 require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-rest.php';
 require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-search.php';
 require_once dirname( __DIR__ ) . '/includes/class-wp-loupe-admin-schema.php';

@@ -1,6 +1,6 @@
 {
-	"name": "soderlind/wp-loupe-admin",
-	"description": "Admin search add-on for WP Loupe.",
+	"name": "soderlind/wp-loupe-admin-search",
+	"description": "Admin search add-on for Loupe Search.",
 	"type": "wordpress-plugin",
 	"require": {
 		"yahnis-elsts/plugin-update-checker": "^5.6"

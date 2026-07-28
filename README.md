@@ -1,6 +1,8 @@
-# WP Loupe – Admin Search
+# Loupe - Admin Search
 
-A faster, smarter search experience for the WordPress admin. This add-on replaces the default admin search with [WP Loupe](https://github.com/soderlind/wp-loupe)-powered typo-tolerant, relevance-ranked results.
+A faster, smarter search experience for the WordPress admin. This add-on replaces the default admin search with [Loupe Search](https://github.com/soderlind/loupe-search)-powered typo-tolerant, relevance-ranked results.
+
+> Formerly **WP Loupe – Admin Search**. Renamed in 1.3.0 to follow the rename of WP Loupe to Loupe Search.
 
 ## Features
 
@@ -10,17 +12,17 @@ A faster, smarter search experience for the WordPress admin. This add-on replace
 - **Command Palette results** — when the WordPress Command Palette is available, Loupe results appear dynamically as you type.
 - **Native list table search** — the standard search boxes on Posts, Pages, custom post types, Media, Users, and Comments screens are automatically enhanced with Loupe results.
 - **Typo-tolerant & ranked** — powered by the Loupe search engine, results are fuzzy-matched and ranked by relevance.
-- **All admin post statuses** — indexes publish, draft, pending, private, and future posts (the main WP Loupe plugin only indexes published content).
-- **Separate admin indexes** — maintains its own [search indexes](https://github.com/soderlind/wp-loupe-admin-search/blob/main/docs/developer.md#indexed-fields) independent of the main WP Loupe plugin, stored as lightweight SQLite databases.
+- **All admin post statuses** — indexes publish, draft, pending, private, and future posts (the main Loupe Search plugin only indexes published content).
+- **Separate admin indexes** — maintains its own [search indexes](https://github.com/soderlind/wp-loupe-admin-search/blob/main/docs/developer.md#indexed-fields) independent of the main Loupe Search plugin, stored as lightweight SQLite databases.
 - **Automatic index management** — indexes are built on first admin load and kept in sync incrementally when content changes.
-- **Extensible schema** — add custom meta fields to the search index via the `wp_loupe_admin_schema` filter.
+- **Extensible schema** — add custom meta fields to the search index via the `loupe_admin_search_schema` filter.
 - **Auto-updates** — receives updates directly from GitHub releases.
 
 ## Requirements
 
 - WordPress 6.8+
 - PHP 8.3+
-- [WP Loupe](https://github.com/soderlind/wp-loupe) plugin active
+- [Loupe Search](https://github.com/soderlind/loupe-search) plugin active
 
 ## Installation
 
