@@ -1,11 +1,11 @@
 === Loupe - Admin Search ===
 Contributors: PerS
 Tags: admin search, search, loupe search, dashboard search, typo-tolerant
-Requires at least: 6.8
+Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
 Requires Plugins: loupe-search
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -57,6 +57,12 @@ Yes — use the `loupe_admin_search_schema` filter. See the [developer documenta
 Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issues
 
 == Changelog ==
+
+= 1.4.0 =
+* Requires WordPress 7.0 or later.
+
+= 1.3.0 =
+* Renamed to Loupe - Admin Search, following the rename of WP Loupe to Loupe Search.
 
 = 1.2.0 =
 * Add WP Loupe Admin Search to the Command Palette.

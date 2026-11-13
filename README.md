@@ -20,7 +20,7 @@ A faster, smarter search experience for the WordPress admin. This add-on replace
 
 ## Requirements
 
-- WordPress 6.8+
+- WordPress 7.0+
 - PHP 8.3+
 - [Loupe Search](https://github.com/soderlind/loupe-search) plugin active
 

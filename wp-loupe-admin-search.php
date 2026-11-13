@@ -3,13 +3,13 @@
  * Plugin Name:       Loupe - Admin Search
  * Plugin URI:        https://github.com/soderlind/wp-loupe-admin-search
  * Description:       Admin search add-on for Loupe Search.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Author:            Per Soderlind
  * Author URI:        https://soderlind.no
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wp-loupe-admin-search
- * Requires at least: 6.8
+ * Requires at least: 7.0
  * Tested up to:      7.0
  * Requires PHP:      8.3
  * Requires Plugins:  loupe-search
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'WP_LOUPE_ADMIN_FILE', __FILE__ );
 define( 'WP_LOUPE_ADMIN_PATH', plugin_dir_path( WP_LOUPE_ADMIN_FILE ) );
 define( 'WP_LOUPE_ADMIN_URL', plugin_dir_url( WP_LOUPE_ADMIN_FILE ) );
-define( 'WP_LOUPE_ADMIN_VERSION', '1.3.0' );
+define( 'WP_LOUPE_ADMIN_VERSION', '1.4.0' );
 
 require_once WP_LOUPE_ADMIN_PATH . 'includes/class-wp-loupe-admin-loader.php';
 

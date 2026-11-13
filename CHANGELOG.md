@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 1.4.0 - 2026-11-13
+
+### Changed
+- Requires WordPress 7.0 or later.
+
 ## 1.3.0 - 2026-07-28
 
 Renamed to **Loupe - Admin Search**, following the rename of WP Loupe to Loupe Search.
