@@ -2,7 +2,7 @@
 namespace Soderlind\Plugin\WPLoupeAdmin;
 
 /**
- * REST controller for WP Loupe Admin.
+ * REST controller for Loupe - Admin Search.
  */
 class WP_Loupe_Admin_REST {
 	/** @var array<int,string> */
@@ -67,7 +67,7 @@ class WP_Loupe_Admin_REST {
 			return;
 		}
 
-		register_rest_route( 'wp-loupe-admin/v1', '/search', [
+		$args = [
 			'methods'             => 'GET',
 			'callback'            => [ $this, 'handle_search' ],
 			'permission_callback' => [ $this, 'can_access_search' ],
@@ -89,7 +89,13 @@ class WP_Loupe_Admin_REST {
 					'sanitize_callback' => 'sanitize_key',
 				],
 			],
-		] );
+		];
+
+		// 'wp-loupe-admin/v1' is a deprecated alias kept for clients written
+		// against the pre-1.3.0 namespace; it will be removed in a future major release.
+		foreach ( [ 'loupe-admin-search/v1', 'wp-loupe-admin/v1' ] as $namespace ) {
+			register_rest_route( $namespace, '/search', $args );
+		}
 
 		$this->routes_registered = true;
 	}
@@ -151,7 +157,7 @@ class WP_Loupe_Admin_REST {
 		$query = trim( (string) $request->get_param( 'q' ) );
 		$scope = sanitize_key( (string) $request->get_param( 'scope' ) );
 		if ( '' === $query ) {
-			return new \WP_Error( 'wp_loupe_admin_search_missing_query', __( 'Missing or empty query parameter "q".', 'wp-loupe-admin' ), [ 'status' => 400 ] );
+			return new \WP_Error( 'wp_loupe_admin_search_missing_query', __( 'Missing or empty query parameter "q".', 'wp-loupe-admin-search' ), [ 'status' => 400 ] );
 		}
 
 		$per_page = max( 1, min( 20, (int) $request->get_param( 'per_page' ) ) );
@@ -195,7 +201,7 @@ class WP_Loupe_Admin_REST {
 
 			$results[] = [
 				'id'            => $post_id,
-				'title'         => get_the_title( $post_id ) ?: __( '(no title)', 'wp-loupe-admin' ),
+				'title'         => get_the_title( $post_id ) ?: __( '(no title)', 'wp-loupe-admin-search' ),
 				'postType'      => $post_type,
 				'postTypeLabel' => $post_type_object && isset( $post_type_object->labels->singular_name ) ? $post_type_object->labels->singular_name : $post_type,
 				'status'        => $post->post_status,
@@ -251,12 +257,12 @@ class WP_Loupe_Admin_REST {
 					'id'            => $plugin_file,
 					'title'         => $plugin_data[ 'Name' ] ?? $plugin_file,
 					'postType'      => 'plugin',
-					'postTypeLabel' => __( 'Plugin', 'wp-loupe-admin' ),
+					'postTypeLabel' => __( 'Plugin', 'wp-loupe-admin-search' ),
 					'status'        => $is_active ? 'active' : 'inactive',
 					'statusLabel'   => sprintf(
 						/* translators: 1: plugin activation state, 2: version number */
-						__( '%1$s, v%2$s', 'wp-loupe-admin' ),
-						$is_active ? __( 'Active', 'wp-loupe-admin' ) : __( 'Inactive', 'wp-loupe-admin' ),
+						__( '%1$s, v%2$s', 'wp-loupe-admin-search' ),
+						$is_active ? __( 'Active', 'wp-loupe-admin-search' ) : __( 'Inactive', 'wp-loupe-admin-search' ),
 						$plugin_data[ 'Version' ] ?? '0'
 					),
 					'editUrl'       => admin_url( 'plugins.php' ),
@@ -291,12 +297,12 @@ class WP_Loupe_Admin_REST {
 				'id'            => $plugin_file,
 				'title'         => $plugin_data[ 'Name' ] ?? $plugin_file,
 				'postType'      => 'plugin',
-				'postTypeLabel' => __( 'Plugin', 'wp-loupe-admin' ),
+				'postTypeLabel' => __( 'Plugin', 'wp-loupe-admin-search' ),
 				'status'        => $is_active ? 'active' : 'inactive',
 				'statusLabel'   => sprintf(
 					/* translators: 1: plugin activation state, 2: version number */
-					__( '%1$s, v%2$s', 'wp-loupe-admin' ),
-					$is_active ? __( 'Active', 'wp-loupe-admin' ) : __( 'Inactive', 'wp-loupe-admin' ),
+					__( '%1$s, v%2$s', 'wp-loupe-admin-search' ),
+					$is_active ? __( 'Active', 'wp-loupe-admin-search' ) : __( 'Inactive', 'wp-loupe-admin-search' ),
 					$plugin_data[ 'Version' ] ?? '0'
 				),
 				'editUrl'       => admin_url( 'plugins.php' ),
@@ -333,7 +339,7 @@ class WP_Loupe_Admin_REST {
 					'id'            => $user_id,
 					'title'         => $user->display_name ?: $user->user_login,
 					'postType'      => 'user',
-					'postTypeLabel' => __( 'User', 'wp-loupe-admin' ),
+					'postTypeLabel' => __( 'User', 'wp-loupe-admin-search' ),
 					'status'        => implode( ', ', array_map( 'strval', (array) $user->roles ) ),
 					'statusLabel'   => $user->user_email,
 					'editUrl'       => get_edit_user_link( $user_id ),
@@ -362,7 +368,7 @@ class WP_Loupe_Admin_REST {
 				'id'            => (int) $user->ID,
 				'title'         => $user->display_name ?: $user->user_login,
 				'postType'      => 'user',
-				'postTypeLabel' => __( 'User', 'wp-loupe-admin' ),
+				'postTypeLabel' => __( 'User', 'wp-loupe-admin-search' ),
 				'status'        => implode( ', ', array_map( 'strval', (array) $user->roles ) ),
 				'statusLabel'   => $user->user_email,
 				'editUrl'       => get_edit_user_link( (int) $user->ID ),
@@ -403,7 +409,7 @@ class WP_Loupe_Admin_REST {
 					'id'            => $comment_id,
 					'title'         => wp_trim_words( wp_strip_all_tags( (string) $comment->comment_content ), 12, '...' ),
 					'postType'      => 'comment',
-					'postTypeLabel' => __( 'Comment', 'wp-loupe-admin' ),
+					'postTypeLabel' => __( 'Comment', 'wp-loupe-admin-search' ),
 					'status'        => $comment->comment_approved,
 					'statusLabel'   => $this->get_comment_status_label( $comment->comment_approved ),
 					'editUrl'       => admin_url( 'comment.php?action=editcomment&c=' . $comment_id ),
@@ -433,7 +439,7 @@ class WP_Loupe_Admin_REST {
 				'id'            => (int) $comment->comment_ID,
 				'title'         => wp_trim_words( wp_strip_all_tags( (string) $comment->comment_content ), 12, '...' ),
 				'postType'      => 'comment',
-				'postTypeLabel' => __( 'Comment', 'wp-loupe-admin' ),
+				'postTypeLabel' => __( 'Comment', 'wp-loupe-admin-search' ),
 				'status'        => $comment->comment_approved,
 				'statusLabel'   => $this->get_comment_status_label( $comment->comment_approved ),
 				'editUrl'       => admin_url( 'comment.php?action=editcomment&c=' . (int) $comment->comment_ID ),
@@ -458,12 +464,12 @@ class WP_Loupe_Admin_REST {
 	 */
 	private function get_comment_status_label( string $status ): string {
 		$map = [
-			'1'        => __( 'Approved', 'wp-loupe-admin' ),
-			'0'        => __( 'Pending', 'wp-loupe-admin' ),
-			'spam'     => __( 'Spam', 'wp-loupe-admin' ),
-			'trash'    => __( 'Trash', 'wp-loupe-admin' ),
-			'approved' => __( 'Approved', 'wp-loupe-admin' ),
-			'hold'     => __( 'Pending', 'wp-loupe-admin' ),
+			'1'        => __( 'Approved', 'wp-loupe-admin-search' ),
+			'0'        => __( 'Pending', 'wp-loupe-admin-search' ),
+			'spam'     => __( 'Spam', 'wp-loupe-admin-search' ),
+			'trash'    => __( 'Trash', 'wp-loupe-admin-search' ),
+			'approved' => __( 'Approved', 'wp-loupe-admin-search' ),
+			'hold'     => __( 'Pending', 'wp-loupe-admin-search' ),
 		];
 
 		return $map[ $status ] ?? $status;

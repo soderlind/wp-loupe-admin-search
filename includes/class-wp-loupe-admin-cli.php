@@ -3,7 +3,7 @@
 namespace Soderlind\Plugin\WPLoupeAdmin;
 
 /**
- * WP-CLI commands for WP Loupe Admin.
+ * WP-CLI commands for Loupe - Admin Search.
  *
  * ## EXAMPLES
  *
@@ -126,15 +126,7 @@ class WP_Loupe_Admin_CLI {
 	 * @return void
 	 */
 	public function status( array $args, array $assoc_args ): void {
-		$default = defined( 'WP_CONTENT_DIR' ) ? ( WP_CONTENT_DIR . '/wp-loupe-db' ) : '';
-		$base    = apply_filters( 'wp_loupe_db_path', $default );
-		$base    = is_string( $base ) ? trim( $base ) : '';
-
-		if ( '' === $base ) {
-			$base = $default;
-		}
-
-		$admin_base = rtrim( $base, '/' ) . '/admin';
+		$admin_base = WP_Loupe_Admin_Paths::admin_db_base();
 		$rows       = [];
 
 		// Post type indexes.

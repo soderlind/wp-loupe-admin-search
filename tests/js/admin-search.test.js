@@ -55,7 +55,7 @@ const enableCommandPalette = () => {
 			},
 		],
 		labels: {
-			category: 'WP Loupe',
+			category: 'Loupe',
 		},
 	};
 };
@@ -122,7 +122,7 @@ describe( 'admin search client', () => {
 		} );
 
 		window.wpLoupeAdminSearch = {
-			path: '/wp-loupe-admin/v1/search',
+				path: '/loupe-admin-search/v1/search',
 			nonce: 'test-nonce',
 			labels: {},
 			perPage: 10,

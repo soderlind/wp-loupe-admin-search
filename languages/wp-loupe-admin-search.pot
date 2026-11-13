@@ -1,0 +1,249 @@
+# Copyright (C) 2026 Per Soderlind
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Loupe - Admin Search 1.3.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-loupe-admin-search\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-28T10:52:12+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wp-loupe-admin-search\n"
+
+#. Plugin Name of the plugin
+#: wp-loupe-admin-search.php
+msgid "Loupe - Admin Search"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: wp-loupe-admin-search.php
+msgid "https://github.com/soderlind/wp-loupe-admin-search"
+msgstr ""
+
+#. Description of the plugin
+#: wp-loupe-admin-search.php
+msgid "Admin search add-on for Loupe Search."
+msgstr ""
+
+#. Author of the plugin
+#: wp-loupe-admin-search.php
+msgid "Per Soderlind"
+msgstr ""
+
+#. Author URI of the plugin
+#: wp-loupe-admin-search.php
+msgid "https://soderlind.no"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-notice.php:63
+msgid "content (post types)"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-notice.php:66
+msgid "users"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-notice.php:69
+msgid "comments"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-notice.php:72
+msgid "plugins"
+msgstr ""
+
+#. translators: %s: comma-separated list of index types that need rebuilding
+#: includes/class-wp-loupe-admin-notice.php:81
+#, php-format
+msgid "Loupe - Admin Search: The following search indexes need rebuilding: %s. Run <code>wp loupe-admin reindex</code> or visit any admin page to trigger auto-rebuild."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:160
+msgid "Missing or empty query parameter \"q\"."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:204
+#: src/js/admin-search.js:233
+msgid "(no title)"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:260
+#: includes/class-wp-loupe-admin-rest.php:300
+msgid "Plugin"
+msgstr ""
+
+#. translators: 1: plugin activation state, 2: version number
+#: includes/class-wp-loupe-admin-rest.php:264
+#: includes/class-wp-loupe-admin-rest.php:304
+#, php-format
+msgid "%1$s, v%2$s"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:265
+#: includes/class-wp-loupe-admin-rest.php:305
+msgid "Active"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:265
+#: includes/class-wp-loupe-admin-rest.php:305
+msgid "Inactive"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:342
+#: includes/class-wp-loupe-admin-rest.php:371
+msgid "User"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:412
+#: includes/class-wp-loupe-admin-rest.php:442
+msgid "Comment"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:467
+#: includes/class-wp-loupe-admin-rest.php:471
+msgid "Approved"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:468
+#: includes/class-wp-loupe-admin-rest.php:472
+msgid "Pending"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:469
+msgid "Spam"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-rest.php:470
+msgid "Trash"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:74
+#: includes/class-wp-loupe-admin-search.php:106
+#: includes/class-wp-loupe-admin-search.php:274
+msgid "Loupe Search"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:87
+#: includes/class-wp-loupe-admin-search.php:281
+msgid "Search admin content"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:88
+msgid "Search indexed content, users, and installed plugins from the admin."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:110
+msgid "Open Loupe admin search"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:164
+#: src/js/admin-search.js:496
+msgid "Enter a search term."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:165
+msgid "Searching..."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:166
+msgid "No matching results found."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:167
+#: src/js/admin-search.js:528
+msgid "Search failed. Please try again."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:168
+#: src/js/admin-search.js:616
+msgid "Previous"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:169
+#: src/js/admin-search.js:633
+msgid "Next"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:170
+#: src/js/admin-search.js:624
+msgid "Page"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:171
+#: src/js/admin-search.js:626
+msgid "of"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:172
+#: includes/class-wp-loupe-admin-search.php:202
+#: includes/class-wp-loupe-admin-search.php:307
+msgid "Content"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:173
+#: includes/class-wp-loupe-admin-search.php:209
+#: includes/class-wp-loupe-admin-search.php:309
+msgid "Users"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:174
+#: includes/class-wp-loupe-admin-search.php:216
+#: includes/class-wp-loupe-admin-search.php:312
+msgid "Plugins"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:175
+#: includes/class-wp-loupe-admin-search.php:223
+msgid "Comments"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:184
+msgid "Loupe"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:276
+msgid "Close search"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:282
+msgid "Search indexed content, users, and installed plugins without leaving the current admin screen."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:306
+msgid "Search scope"
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:316
+msgid "Search content, users, plugins..."
+msgstr ""
+
+#: includes/class-wp-loupe-admin-search.php:319
+msgid "Search"
+msgstr ""
+
+#: wp-loupe-admin-search.php:114
+msgid "Loupe - Admin Search requires the Loupe Search plugin to be active."
+msgstr ""
+
+#: src/js/admin-search.js:504
+msgid "Searching…"
+msgstr ""
+
+#: src/js/admin-search.js:576
+msgid "No matching content found."
+msgstr ""
+
+#: src/js/admin-search.js:601
+msgid "total matches"
+msgstr ""
+
+#: src/js/admin-search.js:690
+msgid "Edit"
+msgstr ""
+
+#: src/js/admin-search.js:699
+msgid "View"
+msgstr ""

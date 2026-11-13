@@ -121,7 +121,7 @@ final class AdminSchemaTest extends TestCase {
 	public function test_schema_is_filterable(): void {
 		Functions\expect( 'apply_filters' )
 			->once()
-			->with( 'wp_loupe_admin_schema', \Mockery::type( 'array' ), 'post' )
+			->with( 'loupe_admin_search_schema', \Mockery::type( 'array' ), 'post' )
 			->andReturnUsing(
 				static function ( string $hook, array $fields ): array {
 					$fields[ 'my_custom' ] = [

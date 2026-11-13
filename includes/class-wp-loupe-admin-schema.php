@@ -5,7 +5,7 @@ namespace Soderlind\Plugin\WPLoupeAdmin;
  * Schema provider for admin search indexes.
  *
  * Defines its own field schemas per entity type, independent of the main
- * WP Loupe plugin's wp_loupe_fields option. Designed to support post types
+ * Loupe Search plugin's wp_loupe_fields option. Designed to support post types
  * now, and users/comments/plugins in a later phase.
  *
  * Each schema entry follows the shape:
@@ -28,7 +28,16 @@ class WP_Loupe_Admin_Schema {
 		 * @param array  $fields      Field definitions.
 		 * @param string $entity_type Entity type key.
 		 */
-		return (array) apply_filters( 'wp_loupe_admin_schema', $fields, $entity_type );
+		$fields = apply_filters( 'loupe_admin_search_schema', $fields, $entity_type );
+
+		$fields = apply_filters_deprecated(
+			'wp_loupe_admin_schema',
+			[ $fields, $entity_type ],
+			'1.3.0',
+			'loupe_admin_search_schema'
+		);
+
+		return (array) $fields;
 	}
 
 	/**

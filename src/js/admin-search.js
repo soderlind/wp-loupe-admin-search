@@ -1,7 +1,7 @@
 ( () => {
 	const config = window.wpLoupeAdminSearch || {};
 	const labels = config.labels || {};
-	const apiPath = ( config.path || '/wp-loupe-admin/v1/search' ).replace(
+	const apiPath = ( config.path || '/loupe-admin-search/v1/search' ).replace(
 		/^(?!\/)/,
 		'/'
 	);
@@ -230,7 +230,7 @@
 				return null;
 			}
 
-			const title = String( hit.title || __( '(no title)', 'wp-loupe-admin' ) );
+			const title = String( hit.title || __( '(no title)', 'wp-loupe-admin-search' ) );
 			const scopeLabel = String( scope?.label || scope?.name || '' );
 			const keywords = [
 				title,
@@ -493,7 +493,7 @@
 				this.renderMessage(
 					results,
 					labels.emptyQuery ||
-						__( 'Enter a search term.', 'wp-loupe-admin' )
+						__( 'Enter a search term.', 'wp-loupe-admin-search' )
 				);
 				return;
 			}
@@ -501,7 +501,7 @@
 			this.lockContainerHeight( results );
 			this.renderMessage(
 				results,
-				labels.loading || __( 'Searching…', 'wp-loupe-admin' )
+				labels.loading || __( 'Searching…', 'wp-loupe-admin-search' )
 			);
 
 			try {
@@ -527,7 +527,7 @@
 						labels.error ||
 						__(
 							'Search failed. Please try again.',
-							'wp-loupe-admin'
+							'wp-loupe-admin-search'
 						)
 				);
 				this.releaseContainerHeight( results );
@@ -573,7 +573,7 @@
 				this.renderMessage(
 					container,
 					labels.noResults ||
-						__( 'No matching content found.', 'wp-loupe-admin' )
+						__( 'No matching content found.', 'wp-loupe-admin-search' )
 				);
 				this.releaseContainerHeight( container );
 				return;
@@ -600,7 +600,7 @@
 			summary.className = 'description';
 			summary.textContent = `${ response.total } ${ __(
 				'total matches',
-				'wp-loupe-admin'
+				'wp-loupe-admin-search'
 			) }`;
 			wrapper.appendChild( summary );
 
@@ -613,7 +613,7 @@
 
 			controls.appendChild(
 				this.createPaginationButton(
-					labels.previous || __( 'Previous', 'wp-loupe-admin' ),
+					labels.previous || __( 'Previous', 'wp-loupe-admin-search' ),
 					( response.page || 1 ) - 1,
 					( response.page || 1 ) <= 1
 				)
@@ -621,16 +621,16 @@
 
 			const indicator = document.createElement( 'span' );
 			indicator.className = 'wp-loupe-admin-search-pagination-indicator';
-			indicator.textContent = `${ labels.page || __( 'Page', 'wp-loupe-admin' ) } ${
+			indicator.textContent = `${ labels.page || __( 'Page', 'wp-loupe-admin-search' ) } ${
 				response.page || 1
-			} ${ labels.of || __( 'of', 'wp-loupe-admin' ) } ${
+			} ${ labels.of || __( 'of', 'wp-loupe-admin-search' ) } ${
 				response.totalPages || 1
 			}`;
 			controls.appendChild( indicator );
 
 			controls.appendChild(
 				this.createPaginationButton(
-					labels.next || __( 'Next', 'wp-loupe-admin' ),
+					labels.next || __( 'Next', 'wp-loupe-admin-search' ),
 					( response.page || 1 ) + 1,
 					( response.page || 1 ) >= ( response.totalPages || 1 )
 				)
@@ -687,7 +687,7 @@
 				actions.appendChild(
 					this.createActionLink(
 						hit.editUrl,
-						__( 'Edit', 'wp-loupe-admin' )
+						__( 'Edit', 'wp-loupe-admin-search' )
 					)
 				);
 			}
@@ -696,7 +696,7 @@
 				actions.appendChild(
 					this.createActionLink(
 						hit.viewUrl,
-						__( 'View', 'wp-loupe-admin' ),
+						__( 'View', 'wp-loupe-admin-search' ),
 						true
 					)
 				);

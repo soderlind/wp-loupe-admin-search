@@ -30,11 +30,11 @@ final class AdminSearchTest extends TestCase {
 		Functions\expect( 'is_blog_admin' )->once()->andReturn( true );
 		Functions\expect( '__' )
 			->once()
-			->with( 'WP Loupe Search', 'wp-loupe-admin' )
-			->andReturn( 'WP Loupe Search' );
+			->with( 'Loupe Search', 'wp-loupe-admin-search' )
+			->andReturn( 'Loupe Search' );
 		Functions\expect( 'wp_add_dashboard_widget' )
 			->once()
-			->with( 'wp_loupe_admin_search', 'WP Loupe Search', [ $search, 'render_dashboard_widget' ] );
+			->with( 'wp_loupe_admin_search', 'Loupe Search', [ $search, 'render_dashboard_widget' ] );
 
 		$search->register_dashboard_widget();
 		self::addToAssertionCount( 1 );
@@ -82,7 +82,7 @@ final class AdminSearchTest extends TestCase {
 					static function ( array $payload ): bool {
 						$scope_names = array_column( $payload[ 'commandPalette' ][ 'scopes' ] ?? [], 'name' );
 
-						return '/wp-loupe-admin/v1/search' === $payload[ 'path' ]
+						return '/loupe-admin-search/v1/search' === $payload[ 'path' ]
 							&& 'test-nonce' === $payload[ 'nonce' ]
 							&& isset( $payload[ 'labels' ][ 'content' ], $payload[ 'labels' ][ 'users' ], $payload[ 'labels' ][ 'plugins' ], $payload[ 'labels' ][ 'comments' ] )
 							&& 8 === $payload[ 'perPage' ]
@@ -90,7 +90,7 @@ final class AdminSearchTest extends TestCase {
 							&& 2 === $payload[ 'commandPalette' ][ 'minQueryLength' ]
 							&& 3 === $payload[ 'commandPalette' ][ 'perScopeLimit' ]
 							&& [ 'content', 'users', 'plugins', 'comments' ] === $scope_names
-							&& 'WP Loupe' === $payload[ 'commandPalette' ][ 'labels' ][ 'category' ];
+							&& 'Loupe' === $payload[ 'commandPalette' ][ 'labels' ][ 'category' ];
 					}
 				)
 			);

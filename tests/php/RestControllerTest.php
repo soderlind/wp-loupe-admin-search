@@ -33,9 +33,9 @@ final class RestControllerTest extends TestCase {
 			->andReturn( 1 );
 
 		Functions\expect( 'register_rest_route' )
-			->once()
+			->twice()
 			->with(
-				'wp-loupe-admin/v1',
+				\Mockery::anyOf( 'loupe-admin-search/v1', 'wp-loupe-admin/v1' ),
 				'/search',
 				\Mockery::on(
 					static function ( array $args ): bool {
@@ -99,7 +99,7 @@ final class RestControllerTest extends TestCase {
 		Functions\when( 'sanitize_key' )->alias( static fn( string $value ): string => $value );
 		Functions\expect( '__' )
 			->once()
-			->with( 'Missing or empty query parameter "q".', 'wp-loupe-admin' )
+			->with( 'Missing or empty query parameter "q".', 'wp-loupe-admin-search' )
 			->andReturn( 'Missing or empty query parameter "q".' );
 
 		$result = $controller->handle_search( $request );

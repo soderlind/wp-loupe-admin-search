@@ -1,10 +1,11 @@
-=== WP Loupe – Admin Search ===
+=== Loupe - Admin Search ===
 Contributors: PerS
-Tags: admin search, search, wp loupe, dashboard search, typo-tolerant
-Requires at least: 6.8
+Tags: admin search, search, loupe search, dashboard search, typo-tolerant
+Requires at least: 7.0
 Tested up to: 7.0
 Requires PHP: 8.3
-Stable tag: 1.2.0
+Requires Plugins: loupe-search
+Stable tag: 1.4.0
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -12,7 +13,9 @@ A faster, smarter search experience for the WordPress admin — typo-tolerant an
 
 == Description ==
 
-WP Loupe – Admin Search replaces the default WordPress admin search with fast, typo-tolerant, relevance-ranked results powered by the [WP Loupe](https://github.com/soderlind/wp-loupe) search engine.
+Loupe - Admin Search replaces the default WordPress admin search with fast, typo-tolerant, relevance-ranked results powered by the [Loupe Search](https://github.com/soderlind/loupe-search) search engine.
+
+**Formerly WP Loupe – Admin Search.** Renamed in 1.3.0 to follow the rename of WP Loupe to Loupe Search.
 
 **Features:**
 
@@ -26,7 +29,7 @@ WP Loupe – Admin Search replaces the default WordPress admin search with fast,
 
 * WordPress 6.8 or higher
 * PHP 8.3 or higher
-* [WP Loupe](https://github.com/soderlind/wp-loupe) plugin active
+* [Loupe Search](https://github.com/soderlind/loupe-search) plugin active
 
 == Installation ==
 
@@ -47,13 +50,19 @@ Indexes rebuild automatically when needed. You can also use WP-CLI: `wp loupe-ad
 
 = Can I add custom fields to the search index? =
 
-Yes — use the `wp_loupe_admin_schema` filter. See the [developer documentation](https://github.com/soderlind/wp-loupe-admin/blob/main/docs/developer.md) for details.
+Yes — use the `loupe_admin_search_schema` filter. See the [developer documentation](https://github.com/soderlind/wp-loupe-admin-search/blob/main/docs/developer.md) for details.
 
 = Where do I report bugs or request features? =
 
 Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issues
 
 == Changelog ==
+
+= 1.4.0 =
+* Requires WordPress 7.0 or later.
+
+= 1.3.0 =
+* Renamed to Loupe - Admin Search, following the rename of WP Loupe to Loupe Search.
 
 = 1.2.0 =
 * Add WP Loupe Admin Search to the Command Palette.
@@ -75,8 +84,8 @@ Open an issue on GitHub: https://github.com/soderlind/wp-loupe-admin-search/issu
 * Release zip renamed from `wp-loupe-admin.zip` to `wp-loupe-admin-search.zip`.
 
 = 0.3.0 =
-* Admin-owned schema with `wp_loupe_admin_schema` filter.
-* Separate admin indexes at `wp-loupe-db/admin/{post_type}/`.
+* Admin-owned schema with `loupe_admin_search_schema` filter.
+* Separate admin indexes at `loupe-search-db/admin/{post_type}/`.
 * Indexes all admin post statuses (publish, draft, pending, private, future).
 * Author name virtual field, dynamic taxonomy fields, post meta fallback.
 * Native list table search interception via `posts_pre_query`.
